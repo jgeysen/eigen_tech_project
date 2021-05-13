@@ -1,0 +1,32 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+
+[requires]
+python_version = "3.9"
+
+[packages]
+click = ">=6.0"
+
+[dev-packages]
+black = "==19.3b0"
+bump2version = "*"
+flake8 = "*"
+isort = "*"
+mypy = "*"
+pre-commit = "*"
+pytest = "*"
+pytest-cov = "*"
+sphinx = "*"
+jupyter = "*"
+ipython = "*"
+
+[scripts]
+init = "pipenv run $SHELL scripts/init.sh"
+commit_test = "pipenv run pre-commit run --hook-stage commit"
+push_test = "pipenv run pre-commit run --hook-stage push"
+tests = "pipenv run pre-commit run -a"
+test = "pipenv run pytest"
+make_docs = "pipenv run $SHELL scripts/make_docs.sh"
+release = "pipenv run $SHELL scripts/git-release.sh"
