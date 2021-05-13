@@ -7,7 +7,6 @@ verify_ssl = true
 python_version = "3.9"
 
 [packages]
-click = ">=6.0"
 
 [dev-packages]
 black = "==19.3b0"
