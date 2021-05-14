@@ -60,7 +60,7 @@ Ready to contribute? Here's how to set up `eigen_tech_project` for local develop
 
     git clone git@github.com:jgeysen/eigen_tech_project.git
 
-2. Create a pipenv environment (assuming you have the `basics <https://github.com/aj-cloete/pipenv-cookiecutter/blob/master/the_basics.md>`_ covered) ::
+2. Create a pipenv environment (assuming you have the `basics <https://github.com/jgeysen/pipenv-cookiecutter/blob/master/the_basics.md>`_ covered) ::
 
     cd eigen_tech_project
     pipenv install --dev
