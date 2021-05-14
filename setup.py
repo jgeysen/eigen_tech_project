@@ -31,7 +31,7 @@ setup(
     ],
     dependency_links=[],
     description="Project made during the interview process for a software engineering position at Eigen Technologies.",
-    install_requires=["click>=6.0"],
+    install_requires=[],
     license="MIT license",
     long_description=readme + "\n\n" + history,
     include_package_data=True,
