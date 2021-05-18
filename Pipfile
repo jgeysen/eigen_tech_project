@@ -7,6 +7,10 @@ verify_ssl = true
 python_version = "3.9"
 
 [packages]
+nltk = "*"
+pandas = "*"
+scikit-learn = "*"
+numpy = "*"
 
 [dev-packages]
 black = "==19.3b0"
