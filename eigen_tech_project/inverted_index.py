@@ -61,9 +61,8 @@ class InvertedIndex:
         """Return list with the top x most occuring interesting words, with
         following elements: (feature_id, occurence)."""
         data = [x[3] for x in self.processed_sentences]
-        countvectorizer = CountVectorizer()
 
-        vectorizer = countvectorizer.fit(data)
+        vectorizer = CountVectorizer().fit(data)
         doc_term_matrix = vectorizer.transform(data)
 
         lemmas = vectorizer.get_feature_names()
@@ -73,14 +72,6 @@ class InvertedIndex:
         ]
 
         return list(zip(lemmas, frequencies, occurences))
-
-    #     def _sentence_mapper(self, sentence_ids):
-    #         """Return list with the top x most occuring interesting words, with following elements: (feature_id, occurence)."""
-    #         return [z for (x,y,z) in self.sentences if x.isin(sentence_ids)]
-
-    #     def _document_mapper(self, sentence_ids):
-    #         """Return list with the top x most occuring interesting words, with following elements: (feature_id, occurence)."""
-    #         return [y for (x,y,z) in self.sentences if x in sentence_ids]
 
     @property
     def solution(self):
