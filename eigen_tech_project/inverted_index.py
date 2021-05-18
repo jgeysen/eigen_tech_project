@@ -1,5 +1,4 @@
 import re
-from operator import add
 from os import listdir
 from os.path import abspath, isfile, join
 
@@ -43,15 +42,11 @@ class InvertedIndex:
         data = []
         for file in self.raw_data:
             # split each file in sentences:
-            sentences = [
-                x for x in self.sentence_splitter.tokenize(file[1]) if len(x) > 1
-            ]
+            sentences = self.sentence_splitter.tokenize(file[1])
             # list of sentence level dictionaries:
             data.extend([(file[0], sentence) for sentence in sentences])
 
-        # add index:
-        ix = [(x,) for x in range(0, len(data))]
-        return list(map(add, ix, data))
+        return data
 
     @property
     def processed_sentences(self):

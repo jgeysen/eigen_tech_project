@@ -57,7 +57,8 @@ class Lemmatizer:
         """Returns representation of the DataLoader object."""
         return "{}({!r})".format(self.__class__.__name__, "")
 
-    def get_wordnet_pos(self, treebank_tag):
+    @staticmethod
+    def get_wordnet_pos(treebank_tag):
         """return WORDNET POS compliance to WORDNET lemmatization (a,n,r,v)"""
         if treebank_tag.startswith("J"):
             return wordnet.ADJ
