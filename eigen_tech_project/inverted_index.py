@@ -27,7 +27,6 @@ class InvertedIndex:
     @property
     def raw_data(self):
         """Returns representation of the DataLoader object."""
-
         return [
             (
                 int(re.sub("[^0-9]", "", f)),
@@ -45,14 +44,13 @@ class InvertedIndex:
             sentences = self.sentence_splitter.tokenize(file[1])
             # list of sentence level dictionaries:
             data.extend([(file[0], sentence) for sentence in sentences])
-
         return data
 
     @property
     def processed_sentences(self):
         """Returns representation of the DataLoader object."""
         return [
-            sentence + (self.sentence_processor(sentence[2]).processed_sentence,)
+            sentence + (self.sentence_processor(sentence[1]).processed_sentence,)
             for sentence in self.sentences
         ]
 
@@ -60,7 +58,7 @@ class InvertedIndex:
     def inverted_index(self):
         """Return list with the top x most occuring interesting words, with
         following elements: (feature_id, occurence)."""
-        data = [x[3] for x in self.processed_sentences]
+        data = [x[2] for x in self.processed_sentences]
 
         vectorizer = CountVectorizer().fit(data)
         doc_term_matrix = vectorizer.transform(data)
@@ -75,9 +73,7 @@ class InvertedIndex:
 
     @property
     def solution(self):
-        df_input = pd.DataFrame(
-            self.sentences, columns=["index", "document", "sentence"]
-        )
+        df_input = pd.DataFrame(self.sentences, columns=["document", "sentence"])
         df_output = pd.DataFrame(
             self.inverted_index, columns=["lemma", "frequency", "sentences"]
         )

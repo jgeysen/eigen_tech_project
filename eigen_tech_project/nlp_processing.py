@@ -21,7 +21,6 @@ class SentenceProcessor:
     @property
     def tokenized_sentence(self):
         """Return a list of sublists with tokens."""
-        # tokenization in each sentences
         return self.tokenizer.tokenize(self.sentence.lower())
 
     @property
@@ -32,8 +31,8 @@ class SentenceProcessor:
     def remove_stopwords(self, text):
         """return WORDNET POS compliance to WORDNET lemmatization (a,n,r,v)"""
         common_words = requests.get(self.common_words_url).text.split()
-        noise = self.stopwords + common_words
-        return [w for w in text if w not in noise and w.isalpha()]
+        noise = set(self.stopwords + common_words)
+        return [w for w in text if w not in noise]
 
     @property
     def lemmatized_sentence_no_stop(self):
@@ -69,7 +68,7 @@ class Lemmatizer:
         elif treebank_tag.startswith("R"):
             return wordnet.ADV
         else:
-            # As default pos in lemmatization is Noun
+            # As default part of speech tag:
             return wordnet.NOUN
 
     def get_lemma(self, word_postag_combo):
