@@ -8,6 +8,7 @@ from cached_property import cached_property
 from sklearn.feature_extraction.text import CountVectorizer
 
 from eigen_tech_project.nlp_processing import SentenceProcessor
+from eigen_tech_project.utils import no_stdout
 
 
 class InvertedIndex:
@@ -15,13 +16,14 @@ class InvertedIndex:
         self.path = path
         self.sentence_splitter = nltk.data.load("tokenizers/punkt/english.pickle")
         self.sentence_processor = SentenceProcessor
-        self.mapped_inverted_index()
+        with no_stdout():
+            self.inverted_index
 
     def __repr__(self):
         """Returns representation of the DataLoader object."""
         return "{}({!r})".format(self.__class__.__name__, self.path)
 
-    @property
+    @cached_property
     def file_names(self):
         """Returns representation of the DataLoader object."""
         return [f for f in listdir(self.path) if isfile(join(self.path, f))]
@@ -96,26 +98,33 @@ class InvertedIndex:
             zip(self.vocabulary, self.lemma_frequencies, self.lemma_occurrences)
         )
 
-    @cached_property
-    def mapped_inverted_index(self):
-        df_input = pd.DataFrame(self.sentences, columns=["document", "sentence"])
+    def mapped_inverted_index(self, save=True):
+        """Return list with the top x most occuring interesting words, with
+        following elements: (feature_id, occurence)."""
+        df_input = pd.DataFrame(
+            self.processed_sentences,
+            columns=["document", "sentence", "lemmatized_sentence"],
+        )
         df_output = pd.DataFrame(
             self.inverted_index, columns=["lemma", "frequency", "sentences"]
         )
 
-        # map sentence ids to documents:
+        # map sentence ids to document ids:
         df_output["documents"] = [
             set(df_input.iloc[x].document) for x in df_output.sentences
         ]
 
-        # map sentence ids to strings:
+        # map sentence ids to the original strings:
         df_output["sentences"] = [
             df_input.iloc[x].sentence.tolist() for x in df_output.sentences
         ]
 
-        df_output = df_output.sort_values("frequency", ascending=False).reset_index(
-            drop=True
-        )
-        df_output.to_csv("output.csv", index=False)
+        df_output = df_output.sort_values("frequency", ascending=False)
+        df_output = df_output.reset_index(drop=True)
 
-        return df_output
+        if save:
+            df_output.to_csv("output.csv", index=False)
+            return df_output
+
+        else:
+            return df_output
