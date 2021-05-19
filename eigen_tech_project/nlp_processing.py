@@ -8,7 +8,11 @@ from nltk.stem import WordNetLemmatizer
 common_words = requests.get(
     "https://gist.githubusercontent.com/jgeysen/05a0e601396125604eaf9b99934ba0d4/raw/0ed5f860ebaef388f82b6e1c42282cec91c661de/1-1000.txt"
 ).text.split()
-stopwords = nltk.corpus.stopwords.words("english")
+try:
+    stopwords = nltk.corpus.stopwords.words("english")
+except LookupError:  # pragma: no cover
+    nltk.download("stopwords")
+    stopwords = nltk.corpus.stopwords.words("english")
 
 
 class SentenceProcessor:
