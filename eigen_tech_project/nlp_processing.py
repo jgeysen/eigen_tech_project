@@ -7,6 +7,8 @@ common_words = requests.get(
     "https://gist.githubusercontent.com/jgeysen/05a0e601396125604eaf9b99934ba0d4/raw/0ed5f860ebaef388f82b6e1c42282cec91c661de/1-1000.txt"
 ).text.split()
 
+stopwords = nltk.corpus.stopwords.words("english")
+
 
 class SentenceProcessor:
     """split the document into sentences and tokenize each sentence."""
@@ -15,7 +17,7 @@ class SentenceProcessor:
         self.sentence = sentence
         self.tokenizer = nltk.RegexpTokenizer(r"\w+")
         self.lemmatizer = Lemmatizer()
-        self.stopwords = nltk.corpus.stopwords.words("english")
+        self.stopwords = stopwords
         self.common_words = common_words
 
     def __repr__(self):
