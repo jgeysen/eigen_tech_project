@@ -3,7 +3,7 @@ import requests
 from nltk.corpus import wordnet
 from nltk.stem import WordNetLemmatizer
 
-import eigen_tech_project.nlp_models  # noqa
+# import eigen_tech_project.nlp_models  # noqa
 
 common_words = requests.get(
     "https://gist.githubusercontent.com/jgeysen/05a0e601396125604eaf9b99934ba0d4/raw/0ed5f860ebaef388f82b6e1c42282cec91c661de/1-1000.txt"

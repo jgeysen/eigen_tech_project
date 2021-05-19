@@ -7,6 +7,8 @@ from typing import List
 
 from setuptools import find_packages, setup
 
+from eigen_tech_project import nlp_models  # noqa
+
 setup_requirements = ["pytest-runner"]  # type: List[str]
 
 test_requirements = ["pytest"]  # type: List[str]
