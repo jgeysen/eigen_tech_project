@@ -16,11 +16,11 @@ class Install(_install):
         _install.do_egg_install(self)
         import nltk  # noqa
 
-        nltk.download()
-        # nltk.download("wordnet")
-        # nltk.download("averaged_perceptron_tagger")
+        # nltk.download()
+        nltk.download("wordnet")
+        nltk.download("averaged_perceptron_tagger")
         # nltk.download("stopwords")
-        # nltk.download("punkt")
+        nltk.download("punkt")
 
 
 setup_requirements = ["pytest-runner"]  # type: List[str]
