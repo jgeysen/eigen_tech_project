@@ -17,7 +17,7 @@ try:  # pragma: no cover
 except LookupError:  # pragma: no cover
     nltk.download("averaged_perceptron_tagger")
 
-try:  # pragma: no cover
-    wordnet = nltk.data.load("corpora/wordnet.zip/wordnet/")
-except LookupError:  # pragma: no cover
-    nltk.download("wordnet")
+# try:  # pragma: no cover
+#     wordnet = nltk.data.load("corpora/wordnet.zip/wordnet/")
+# except LookupError:  # pragma: no cover
+#     nltk.download("wordnet")
