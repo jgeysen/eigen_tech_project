@@ -55,21 +55,46 @@ class InvertedIndex:
         ]
 
     @property
-    def inverted_index(self):
+    def count_vectorizer(self):
         """Return list with the top x most occuring interesting words, with
         following elements: (feature_id, occurence)."""
         data = [x[2] for x in self.processed_sentences]
+        return CountVectorizer().fit(data)
 
-        vectorizer = CountVectorizer().fit(data)
-        doc_term_matrix = vectorizer.transform(data)
+    @property
+    def document_term_matrix(self):
+        """Return list with the top x most occuring interesting words, with
+        following elements: (feature_id, occurence)."""
+        data = [x[2] for x in self.processed_sentences]
+        return self.count_vectorizer.transform(data)
 
-        lemmas = vectorizer.get_feature_names()
-        frequencies = doc_term_matrix.sum(axis=0).tolist()[0]
+    @property
+    def vocabulary(self):
+        """Return list with the top x most occuring interesting words, with
+        following elements: (feature_id, occurence)."""
+        return self.count_vectorizer.get_feature_names()
+
+    @property
+    def lemma_frequencies(self):
+        """Return list with the top x most occuring interesting words, with
+        following elements: (feature_id, occurence)."""
+        return self.document_term_matrix.sum(axis=0).tolist()[0]
+
+    @property
+    def lemma_occurences(self):
+        """Return list with the top x most occuring interesting words, with
+        following elements: (feature_id, occurence)."""
         occurences = [
-            doc_term_matrix[:, i].nonzero()[0].tolist() for i in range(0, len(lemmas))
+            self.document_term_matrix[:, i].nonzero()[0].tolist()
+            for i in range(0, len(self.vocabulary))
         ]
+        return occurences
 
-        return list(zip(lemmas, frequencies, occurences))
+    @property
+    def inverted_index(self):
+        """Return list with the top x most occuring interesting words, with
+        following elements: (feature_id, occurence)."""
+        return list(zip(self.vocabulary, self.lemma_frequencies, self.lemma_occurences))
 
     @property
     def solution(self):
