@@ -1,15 +1,16 @@
 from eigen_tech_project.nlp_processing import Lemmatizer
 
+# from eigen_tech_project.nlp_processing import SentenceProcessor
+
 
 def test_lemmatizer_lemmas():
     tokenized_sentence = ["hello", "I", "am", "an", "engineer"]
     lemmatizer = Lemmatizer()
 
     lemmas = lemmatizer.lemmas(tokenized_sentence)
-    goal_lemmas = ["hello", "I", "be", "an", "engineer"]
+    lemmas_exp = ["hello", "I", "be", "an", "engineer"]
 
-    for i in range(0, len(lemmas)):
-        assert lemmas[i] == goal_lemmas[i]
+    assert lemmas == lemmas_exp
 
 
 def test_lemmatizer_get_wordnet_pos():
@@ -92,11 +93,11 @@ def test_lemmatizer_get_wordnet_pos():
     ]
 
     lemmatizer = Lemmatizer()
+    equivalent_wordnet_tags_exp = [
+        lemmatizer.get_wordnet_pos(treebank_tag) for treebank_tag in treebank_tags
+    ]
 
-    for i in range(0, len(treebank_tags)):
-        assert (
-            lemmatizer.get_wordnet_pos(treebank_tags[i]) == equivalent_wordnet_tags[i]
-        )
+    assert equivalent_wordnet_tags == equivalent_wordnet_tags_exp
 
 
 def test_sentence_processor():

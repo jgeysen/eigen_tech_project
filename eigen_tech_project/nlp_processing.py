@@ -4,7 +4,7 @@ from nltk.corpus import wordnet
 from nltk.stem import WordNetLemmatizer
 
 common_words = requests.get(
-    "https://gist.githubusercontent.com/deekayen/4148741/raw/98d35708fa344717d8eee15d11987de6c8e26d7d/1-1000.txt"
+    "https://gist.githubusercontent.com/jgeysen/05a0e601396125604eaf9b99934ba0d4/raw/0ed5f860ebaef388f82b6e1c42282cec91c661de/1-1000.txt"
 ).text.split()
 
 
@@ -35,7 +35,7 @@ class SentenceProcessor:
     def remove_stopwords(self, text):
         """return WORDNET POS compliance to WORDNET lemmatization (a,n,r,v)"""
         noise = set(self.stopwords + self.common_words)
-        return [w for w in text if w not in noise]
+        return [w for w in text if w not in noise and w.isalpha()]
 
     @property
     def lemmatized_sentence_no_stop(self):
