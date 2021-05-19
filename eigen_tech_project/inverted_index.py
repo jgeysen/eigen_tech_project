@@ -4,6 +4,7 @@ from os.path import abspath, isfile, join
 
 import nltk
 import pandas as pd
+from cached_property import cached_property
 from sklearn.feature_extraction.text import CountVectorizer
 
 from eigen_tech_project.nlp_processing import SentenceProcessor
@@ -14,6 +15,7 @@ class InvertedIndex:
         self.path = path
         self.sentence_splitter = nltk.data.load("tokenizers/punkt/english.pickle")
         self.sentence_processor = SentenceProcessor
+        self.mapped_inverted_index()
 
     def __repr__(self):
         """Returns representation of the DataLoader object."""
@@ -24,7 +26,7 @@ class InvertedIndex:
         """Returns representation of the DataLoader object."""
         return [f for f in listdir(self.path) if isfile(join(self.path, f))]
 
-    @property
+    @cached_property
     def raw_data(self):
         """Returns representation of the DataLoader object."""
         return [
@@ -35,7 +37,7 @@ class InvertedIndex:
             for f in self.file_names
         ]
 
-    @property
+    @cached_property
     def sentences(self):
         """Returns representation of the DataLoader object."""
         data = []
@@ -46,7 +48,7 @@ class InvertedIndex:
             data.extend([(file[0], sentence) for sentence in sentences])
         return data
 
-    @property
+    @cached_property
     def processed_sentences(self):
         """Returns representation of the DataLoader object."""
         return [
@@ -54,39 +56,39 @@ class InvertedIndex:
             for sentence in self.sentences
         ]
 
-    @property
+    @cached_property
     def count_vectorizer(self):
         """Return list with the top x most occuring interesting words, with
         following elements: (feature_id, occurence)."""
         data = [x[2] for x in self.processed_sentences]
         return CountVectorizer().fit(data)
 
-    @property
+    @cached_property
     def document_term_matrix(self):
         """Return list with the top x most occuring interesting words, with
         following elements: (feature_id, occurence)."""
         data = [x[2] for x in self.processed_sentences]
         return self.count_vectorizer.transform(data)
 
-    @property
+    @cached_property
     def vocabulary(self):
         """Return list with the top x most occuring interesting words, with
         following elements: (feature_id, occurence)."""
         return self.count_vectorizer.get_feature_names()
 
-    @property
+    @cached_property
     def lemma_frequencies(self):
         """Return list with the top x most occuring interesting words, with
         following elements: (feature_id, occurence)."""
         return self.document_term_matrix.sum(axis=0).tolist()[0]
 
-    @property
+    @cached_property
     def lemma_occurrences(self):
         """Return list with the top x most occuring interesting words, with
         following elements: (feature_id, occurence)."""
         return self.document_term_matrix.transpose().tolil().rows.tolist()
 
-    @property
+    @cached_property
     def inverted_index(self):
         """Return list with the top x most occuring interesting words, with
         following elements: (feature_id, occurence)."""
@@ -94,7 +96,7 @@ class InvertedIndex:
             zip(self.vocabulary, self.lemma_frequencies, self.lemma_occurrences)
         )
 
-    @property
+    @cached_property
     def mapped_inverted_index(self):
         df_input = pd.DataFrame(self.sentences, columns=["document", "sentence"])
         df_output = pd.DataFrame(

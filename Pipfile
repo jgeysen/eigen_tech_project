@@ -10,6 +10,7 @@ python_version = "3.9"
 nltk = "*"
 pandas = "*"
 scikit-learn = "*"
+cached-property = "*"
 
 [dev-packages]
 black = "==19.3b0"
