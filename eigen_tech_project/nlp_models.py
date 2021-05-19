@@ -1,5 +1,3 @@
-import nltk
-
 # try:  # pragma: no cover
 #     nltk.data.load("tokenizers/punkt/english.pickle")
 # except LookupError:  # pragma: no cover
@@ -23,7 +21,7 @@ import nltk
 #     nltk.download("wordnet")
 
 
-nltk.download("wordnet")
-nltk.download("averaged_perceptron_tagger")
-nltk.download("stopwords")
-nltk.download("punkt")
+# nltk.download("wordnet")
+# nltk.download("averaged_perceptron_tagger")
+# nltk.download("stopwords")
+# nltk.download("punkt")
