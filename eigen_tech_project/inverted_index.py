@@ -81,23 +81,21 @@ class InvertedIndex:
         return self.document_term_matrix.sum(axis=0).tolist()[0]
 
     @property
-    def lemma_occurences(self):
+    def lemma_occurrences(self):
         """Return list with the top x most occuring interesting words, with
         following elements: (feature_id, occurence)."""
-        occurences = [
-            self.document_term_matrix[:, i].nonzero()[0].tolist()
-            for i in range(0, len(self.vocabulary))
-        ]
-        return occurences
+        return self.document_term_matrix.transpose().tolil().rows.tolist()
 
     @property
     def inverted_index(self):
         """Return list with the top x most occuring interesting words, with
         following elements: (feature_id, occurence)."""
-        return list(zip(self.vocabulary, self.lemma_frequencies, self.lemma_occurences))
+        return list(
+            zip(self.vocabulary, self.lemma_frequencies, self.lemma_occurrences)
+        )
 
     @property
-    def solution(self):
+    def mapped_inverted_index(self):
         df_input = pd.DataFrame(self.sentences, columns=["document", "sentence"])
         df_output = pd.DataFrame(
             self.inverted_index, columns=["lemma", "frequency", "sentences"]

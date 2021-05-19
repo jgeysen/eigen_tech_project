@@ -3,6 +3,10 @@ import requests
 from nltk.corpus import wordnet
 from nltk.stem import WordNetLemmatizer
 
+common_words = requests.get(
+    "https://gist.githubusercontent.com/deekayen/4148741/raw/98d35708fa344717d8eee15d11987de6c8e26d7d/1-1000.txt"
+).text.split()
+
 
 class SentenceProcessor:
     """split the document into sentences and tokenize each sentence."""
@@ -12,7 +16,7 @@ class SentenceProcessor:
         self.tokenizer = nltk.RegexpTokenizer(r"\w+")
         self.lemmatizer = Lemmatizer()
         self.stopwords = nltk.corpus.stopwords.words("english")
-        self.common_words_url = "https://gist.githubusercontent.com/deekayen/4148741/raw/98d35708fa344717d8eee15d11987de6c8e26d7d/1-1000.txt"
+        self.common_words = common_words
 
     def __repr__(self):
         """Returns representation of the DataLoader object."""
@@ -30,8 +34,7 @@ class SentenceProcessor:
 
     def remove_stopwords(self, text):
         """return WORDNET POS compliance to WORDNET lemmatization (a,n,r,v)"""
-        common_words = requests.get(self.common_words_url).text.split()
-        noise = set(self.stopwords + common_words)
+        noise = set(self.stopwords + self.common_words)
         return [w for w in text if w not in noise]
 
     @property
