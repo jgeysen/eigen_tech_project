@@ -7,4 +7,8 @@ try:  # pragma: no cover
 except LookupError:  # pragma: no cover
     # nltk.download("wordnet")
     nltk.download("punkt")
-    # nltk_pipe = nltk.data.load("tokenizers/punkt/english.pickle")
+
+try:  # pragma: no cover
+    stopwords = nltk.corpus.stopwords.words("english")
+except LookupError:  # pragma: no cover
+    nltk.download("stopwords")
