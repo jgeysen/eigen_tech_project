@@ -1,0 +1,14 @@
+README.rst
+pyproject.toml
+setup.cfg
+setup.py
+eigen_tech_project/__init__.py
+eigen_tech_project/inverted_index.py
+eigen_tech_project/nlp_models.py
+eigen_tech_project/nlp_processing.py
+eigen_tech_project/utils.py
+eigen_tech_project.egg-info/PKG-INFO
+eigen_tech_project.egg-info/SOURCES.txt
+eigen_tech_project.egg-info/dependency_links.txt
+eigen_tech_project.egg-info/requires.txt
+eigen_tech_project.egg-info/top_level.txt

@@ -1,0 +1,16 @@
+Metadata-Version: 2.1
+Name: eigen-tech-project
+Version: 0.1.0
+Summary: Project made during the interview process for a software engineering position at Eigen Technologies.
+Home-page: https://github.com/jgeysen/eigen_tech_project
+Author: Jori Geysen
+Author-email: jorigeysen@gmail.com
+License: UNKNOWN
+Description: UNKNOWN
+Keywords: eigen_tech_project
+Platform: UNKNOWN
+Classifier: Development Status :: 2 - Pre-Alpha
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Natural Language :: English
+Classifier: Programming Language :: Python :: 3.9
