@@ -10,12 +10,12 @@ import nltk
 # except LookupError:  # pragma: no cover
 #     nltk.download("stopwords")
 #
-# try:  # pragma: no cover
-#     pos = nltk.data.load(
-#         "taggers/averaged_perceptron_tagger/averaged_perceptron_tagger.pickle"
-#     )
-# except LookupError:  # pragma: no cover
-#     nltk.download("averaged_perceptron_tagger")
+try:  # pragma: no cover
+    pos = nltk.data.load(
+        "taggers/averaged_perceptron_tagger/averaged_perceptron_tagger.pickle"
+    )
+except LookupError:  # pragma: no cover
+    nltk.download("averaged_perceptron_tagger")
 #
 # try:  # pragma: no cover
 #     from nltk.corpus import wordnet  # noqa
