@@ -7,6 +7,10 @@ verify_ssl = true
 python_version = "3.9"
 
 [packages]
+nltk = "*"
+pandas = "*"
+scikit-learn = "*"
+cached-property = "*"
 
 [dev-packages]
 black = "==19.3b0"
@@ -28,4 +32,3 @@ push_test = "pipenv run pre-commit run --hook-stage push"
 tests = "pipenv run pre-commit run -a"
 test = "pipenv run pytest"
 make_docs = "pipenv run $SHELL scripts/make_docs.sh"
-release = "pipenv run $SHELL scripts/git-release.sh"
