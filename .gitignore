@@ -162,6 +162,7 @@ Temporary Items
 
 # Jupyter notebooks - add manually as needed
 *.ipynb
+*.ipynb_checkpoints
 
 # PyCharm artefacts
 .idea*
