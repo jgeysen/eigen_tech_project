@@ -21,6 +21,7 @@ jobs:
         run: |
           pip install pipenv
           pipenv install --deploy --dev
+          pipenv install -e .
 
       - run: pipenv run mypy
       - run: pipenv run pytest #--cov --cov-fail-under=100
