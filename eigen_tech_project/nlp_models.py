@@ -17,13 +17,13 @@ try:  # pragma: no cover
 except LookupError:  # pragma: no cover
     nltk.download("averaged_perceptron_tagger")
 #
-# try:  # pragma: no cover
-#     from nltk.corpus import wordnet  # noqa
-# except LookupError:  # pragma: no cover
-#     nltk.download("wordnet")
+try:  # pragma: no cover
+    from nltk.corpus import wordnet  # noqa
+except LookupError:  # pragma: no cover
+    nltk.download("wordnet")
 
 
-nltk.download("wordnet")
+# nltk.download("wordnet")
 # nltk.download("averaged_perceptron_tagger")
 # nltk.download("stopwords")
 # nltk.download("punkt")
