@@ -7,7 +7,7 @@ import pandas as pd
 from cached_property import cached_property
 from sklearn.feature_extraction.text import CountVectorizer
 
-# import eigen_tech_project.nlp_models  # noqa
+import eigen_tech_project.nlp_models  # noqa
 from eigen_tech_project.nlp_processing import SentenceProcessor
 from eigen_tech_project.utils import no_stdout
 
