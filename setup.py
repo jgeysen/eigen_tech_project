@@ -6,7 +6,6 @@
 import atexit
 from typing import List
 
-import nltk
 from setuptools import find_packages, setup
 from setuptools.command.install import install
 
@@ -26,6 +25,8 @@ from setuptools.command.install import install
 
 
 def _post_install():
+    import nltk  # noqa
+
     nltk.download("wordnet")
     nltk.download("averaged_perceptron_tagger")
     nltk.download("stopwords")
