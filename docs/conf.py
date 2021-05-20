@@ -45,14 +45,13 @@ extensions = [
     "sphinx.ext.inheritance_diagram",
     "sphinx.ext.graphviz",
     "sphinx.ext.napoleon",
-    "sphinx.ext.todo",
     "sphinx.ext.viewcode",
 ]
 
 autoapi_dirs = ["../eigen_tech_project"]
 autoapi_keep_files = True
 autoapi_generate_api_docs = True
-autoapi_ignore = ["*migrations*", "*ipynb_checkpoints*"]
+autoapi_ignore = ["*ipynb_checkpoints*"]
 
 # autodoc_default_flags = [
 #     "members",
