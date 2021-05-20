@@ -11,6 +11,7 @@ nltk = "*"
 pandas = "*"
 scikit-learn = "*"
 cached-property = "*"
+requests = "*"
 
 [dev-packages]
 black = "==19.3b0"
