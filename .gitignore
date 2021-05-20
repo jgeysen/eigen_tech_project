@@ -76,6 +76,7 @@ instance/
 docs/_build/
 docs/_autosummary
 docs/autoapi
+docs/_static
 
 # PyBuilder
 target/
