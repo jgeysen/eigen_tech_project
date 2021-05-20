@@ -37,6 +37,7 @@ except Exception:
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named "sphinx.ext.*") or your custom ones.
 extensions = [
+    "autoapi.extension",
     "sphinx.ext.autodoc",
     "sphinx.ext.autosummary",
     "sphinx.ext.coverage",
@@ -47,15 +48,20 @@ extensions = [
     "sphinx.ext.viewcode",
 ]
 
-autodoc_default_flags = [
-    "members",
-    "inherited-members",
-    "private-members",
-    "show-inheritance",
-]
-autodoc_member_order = "bysource"
+autoapi_dirs = ["../eigen_tech_project"]
+autoapi_keep_files = True
+autoapi_generate_api_docs = True
+autoapi_ignore = ["*ipynb_checkpoints*"]
 
-autosummary_generate = True
+# autodoc_default_flags = [
+#     "members",
+#     "inherited-members",
+#     "private-members",
+#     "show-inheritance",
+# ]
+# autodoc_member_order = "bysource"
+
+# autosummary_generate = True
 napoleon_numpy_docstring = False  # Force consistency, leave only Google
 napoleon_use_rtype = False  # More legible
 
@@ -108,7 +114,7 @@ todo_include_todos = False
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = "alabaster"
+html_theme = "sphinx_rtd_theme"
 
 # Theme options are theme-specific and customize the look and feel of a
 # theme further.  For a list of options available for each theme, see the
