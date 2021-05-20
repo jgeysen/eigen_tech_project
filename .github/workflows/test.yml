@@ -21,6 +21,7 @@ jobs:
         run: |
           pip install pipenv
           pipenv install -e . --skip-lock
+          pipenv install --dev
 
-#      - run: pipenv run mypy
+      - run: pipenv run mypy
       - run: pipenv run pytest #--cov --cov-fail-under=100
