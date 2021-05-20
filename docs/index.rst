@@ -2,6 +2,7 @@ Welcome to Eigen_Tech_NLP_Project's documentation!
 ================================================================================================
 
 .. toctree::
+   :glob:
    :maxdepth: 2
    :caption: Contents:
 
@@ -9,9 +10,7 @@ Welcome to Eigen_Tech_NLP_Project's documentation!
    installation
    usage
    modules
-   contributing
-   authors
-   history
+   API Reference <autoapi/index>
 
 Indices and tables
 ==================
