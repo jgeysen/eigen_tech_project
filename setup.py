@@ -3,11 +3,9 @@
 
 """The setup script."""
 
-import atexit
 from typing import List
 
 from setuptools import find_packages, setup
-from setuptools.command.install import install
 
 # from eigen_tech_project import nlp_models  # noqa
 
@@ -24,19 +22,19 @@ from setuptools.command.install import install
 #         nltk.download("punkt")
 
 
-def _post_install():
-    import nltk  # noqa
-
-    nltk.download("wordnet")
-    nltk.download("averaged_perceptron_tagger")
-    nltk.download("stopwords")
-    nltk.download("punkt")
-
-
-class NewInstall(install):
-    def __init__(self, *args, **kwargs):
-        super(NewInstall, self).__init__(*args, **kwargs)
-        atexit.register(_post_install)
+# def _post_install():
+#     import nltk  # noqa
+#
+#     nltk.download("wordnet")
+#     nltk.download("averaged_perceptron_tagger")
+#     nltk.download("stopwords")
+#     nltk.download("punkt")
+#
+#
+# class NewInstall(install):
+#     def __init__(self, *args, **kwargs):
+#         super(NewInstall, self).__init__(*args, **kwargs)
+#         atexit.register(_post_install)
 
 
 setup_requirements = ["pytest-runner"]  # type: List[str]
@@ -64,5 +62,5 @@ setup(
     tests_require=test_requirements,
     url="https://github.com/jgeysen/eigen_tech_project",
     version="0.1.0",
-    cmdclass={"install": NewInstall},
+    # cmdclass={"install": NewInstall},
 )
