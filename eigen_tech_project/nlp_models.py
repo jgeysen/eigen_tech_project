@@ -11,7 +11,7 @@ import nltk
 #     nltk.download("stopwords")
 #
 try:  # pragma: no cover
-    pos = nltk.data.load(
+    nltk.data.load(
         "taggers/averaged_perceptron_tagger/averaged_perceptron_tagger.pickle"
     )
 except LookupError:  # pragma: no cover
@@ -24,6 +24,6 @@ except LookupError:  # pragma: no cover
 
 
 nltk.download("wordnet")
-nltk.download("averaged_perceptron_tagger")
+# nltk.download("averaged_perceptron_tagger")
 nltk.download("stopwords")
 nltk.download("punkt")
