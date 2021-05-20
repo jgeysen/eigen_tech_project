@@ -23,7 +23,7 @@ setup(
     ],
     dependency_links=[],
     description="Project made during the interview process for a software engineering position at Eigen Technologies.",
-    install_requires=["nltk", "pandas", "scikit-learn", "cached-property"],
+    install_requires=["nltk", "pandas", "scikit-learn", "cached-property", "requests"],
     keywords="eigen_tech_project",
     name="eigen_tech_project",
     packages=find_packages(include=["eigen_tech_project"]),
