@@ -13,13 +13,13 @@ from setuptools.command.install import install as _install
 
 class Install(_install):
     def run(self):
-        _install.do_egg_install(self)
+        _install.run(self)
         import nltk  # noqa
 
         # nltk.download()
         nltk.download("wordnet")
         nltk.download("averaged_perceptron_tagger")
-        # nltk.download("stopwords")
+        nltk.download("stopwords")
         nltk.download("punkt")
 
 
