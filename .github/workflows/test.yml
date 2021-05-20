@@ -19,8 +19,7 @@ jobs:
 
       - name: Install dependencies with pipenv
         run: |
-#          pip install pipenv
-#          pipenv install --deploy --dev
+          pip install pipenv
           pipenv install -e . --skip-lock
 
       - run: pipenv run mypy
