@@ -7,11 +7,8 @@ Eigen_Tech_NLP_Project
 NLP project which leverages a.o. NLTK and Sklearn to create an (in memory) inverted index for a collection of
 .txt files containing textual data.
 
-Installation:
+Installation from source:
 =====================
-
-From source:
-::
 
 The source for Eigen_Tech_NLP_Project can be downloaded from the `Github repo`_:
 
@@ -33,36 +30,44 @@ and you can install it with:
 
     $ python setup.py install
 
-With pip:
-::
 
-  pip install -e git+ssh://git@github.com/jgeysen/eigen_tech_project.git@main#egg=eigen_tech_project
+Installation with pip:
+=====================
+
+.. code-block:: console
+
+    $ pip install -e git+ssh://git@github.com/jgeysen/eigen_tech_project.git@main#egg=eigen_tech_project
 
 Setup for development:
 =====================
 
 Clone the public repository:
-::
 
 .. code-block:: console
 
     $ git clone git://github.com/jgeysen/eigen_tech_project
 
+cd into the repository:
 
-cd into the repository and run the following:
-::
+.. code-block:: console
 
-  # Install dependencies
-  pipenv install --dev
+    $ cd eigen_tech_project
 
-  # Setup pre-commit and pre-push hooks
-  pipenv run init
+and run the following:
 
+.. code-block:: console
+
+    # Install dependencies
+    $ pipenv install --dev
+
+    # Setup pre-commit and pre-push hooks
+    $ pipenv run init
 
 To activate the environment, again from the root directory of the repo:
-::
 
-  pipenv shell
+.. code-block:: console
+
+    pipenv shell
 
 
 Credits
