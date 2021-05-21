@@ -13,7 +13,7 @@ Installation:
 Installation from source:
 =====================
 
-The source for Eigen_Tech_NLP_Project can be downloaded from this `Github repo`_:
+The source for Eigen_Tech_NLP_Project can be downloaded from the public repository:
 
 Clone the public repository:
 
