@@ -163,6 +163,7 @@ class InvertedIndex:
 
         This list has a length equal to the vocabulary size. The position of each sublist in this
         list maps directly to a lemma (with the same, alphabetical position) in the vocabulary list.
+
         The sublist here represents a collection of the sentence ids in which a lemma occurs.
         These sentence ids correspond to rows in the sentence-term matrix.
 
@@ -198,8 +199,7 @@ class InvertedIndex:
         sentences.
 
         Args:
-            save: Boolean, indicating if one wants to directly save the mapped_inverted_index into a .csv file
-            in the current directory.
+            save: Boolean, if True, the output is saved in a .csv file in the current directory. Defaults to False.
         Returns:
             pd.DataFrame():
         """
