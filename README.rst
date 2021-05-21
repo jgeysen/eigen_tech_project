@@ -23,13 +23,13 @@ Clone the public repository:
 
     $ git clone git://github.com/jgeysen/eigen_tech_project
 
-Once you have a copy of the source, cd into the project:
+cd into the repository:
 
 .. code-block:: console
 
     $ cd eigen_tech_project
 
-and you can install it with:
+and run the following:
 
 .. code-block:: console
 
@@ -43,7 +43,7 @@ and you can install it with:
 
     $ pip install -e git+ssh://git@github.com/jgeysen/eigen_tech_project.git@main#egg=eigen_tech_project
 
-Setup for development:
+Setup for development (with pipenv):
 ########
 
 Clone the public repository:
