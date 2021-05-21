@@ -10,10 +10,10 @@ NLP project which leverages a.o. NLTK and Sklearn to create an (in memory) inver
 Installation:
 ########
 
-Installation from source:
-=====================
+There are two options here: installation from source and installation with pip.
 
-The source for Eigen_Tech_NLP_Project can be downloaded from the `Github repo`_:
+1. Installation from source:
+=====================
 
 Clone the public repository:
 
@@ -21,27 +21,27 @@ Clone the public repository:
 
     $ git clone git://github.com/jgeysen/eigen_tech_project
 
-Once you have a copy of the source, cd into the project:
+cd into the repository:
 
 .. code-block:: console
 
     $ cd eigen_tech_project
 
-and you can install it with:
+and run the following:
 
 .. code-block:: console
 
     $ python setup.py install
 
 
-Installation with pip:
+2. Installation with pip:
 =====================
 
 .. code-block:: console
 
     $ pip install -e git+ssh://git@github.com/jgeysen/eigen_tech_project.git@main#egg=eigen_tech_project
 
-Setup for development:
+Setup for development (with pipenv):
 ########
 
 Clone the public repository:
@@ -71,6 +71,12 @@ To activate the environment, again from the root directory of the repo:
 .. code-block:: console
 
     pipenv shell
+
+To create and view the documentation:
+
+.. code-block:: console
+
+    pipenv run make_docs
 
 
 .. |GitHub Test| image:: https://github.com/jgeysen/eigen_tech_project/workflows/Test/badge.svg

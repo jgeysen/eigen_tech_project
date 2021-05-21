@@ -155,7 +155,7 @@ class InvertedIndex:
         """Returns a list of integers, representing the frequency that each
         word occurs in the vocabulary.
 
-        The position of each integer in this list corresponds a lemma in the
+        The position of each integer in this list corresponds to a lemma in the
         alphabetical vocabulary list (with the same respective position). The integers represent the frequency
         a lemma occurs in the entire corpus (across sentences and files).
 
