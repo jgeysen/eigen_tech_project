@@ -176,7 +176,7 @@ class InvertedIndex:
         return self.document_term_matrix.transpose().tolil().rows.tolist()
 
     @cached_property
-    def inverted_index(self) -> List[Tuple[str, int, set]]:
+    def inverted_index(self) -> List[Tuple[str, int, List[int]]]:
         """Returns a list of tuples, each containing a lemma, the total
         frequency of that lemma in the corpus and a collection of the sentence
         ids that lemma occurs in.
