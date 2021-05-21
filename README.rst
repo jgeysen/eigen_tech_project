@@ -4,12 +4,52 @@
 Eigen_Tech_NLP_Project
 ******************************************************
 
-Project made during the interview process for a software engineering position at Eigen Technologies.
+NLP project which leverages a.o. NLTK and Sklearn to create an (in memory) inverted index for a collection of
+.txt files containing textual data.
 
-Setup
-=====
+Installation:
+=====================
 
-Before you do anything else, run the following from the root directory of the repo:
+From source:
+::
+
+The source for Eigen_Tech_NLP_Project can be downloaded from the `Github repo`_:
+
+Clone the public repository:
+
+.. code-block:: console
+
+    $ git clone git://github.com/jgeysen/eigen_tech_project
+
+Once you have a copy of the source, cd into the project:
+
+.. code-block:: console
+
+    $ cd eigen_tech_project
+
+and you can install it with:
+
+.. code-block:: console
+
+    $ python setup.py install
+
+With pip:
+::
+
+  pip install -e git+ssh://git@github.com/jgeysen/eigen_tech_project.git@main#egg=eigen_tech_project
+
+Setup for development:
+=====================
+
+Clone the public repository:
+::
+
+.. code-block:: console
+
+    $ git clone git://github.com/jgeysen/eigen_tech_project
+
+
+cd into the repository and run the following:
 ::
 
   # Install dependencies
