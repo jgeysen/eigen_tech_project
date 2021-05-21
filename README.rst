@@ -10,12 +10,10 @@ NLP project which leverages a.o. NLTK and Sklearn to create an (in memory) inver
 Installation:
 ########
 
-There are two options here: installation from source and installation with pip:
+There are two options here: installation from source and installation with pip.
 
 1. Installation from source:
 =====================
-
-The source for Eigen_Tech_NLP_Project can be downloaded from the public repository:
 
 Clone the public repository:
 
