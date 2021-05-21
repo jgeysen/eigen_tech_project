@@ -14,7 +14,8 @@ stopwords = nltk.corpus.stopwords.words("english")
 
 
 class SentenceProcessor:
-    """split the document into sentences and tokenize each sentence."""
+    """Process a sentence using tokenization and lemmatization supported by
+    Part Of Speech tagging."""
 
     def __init__(self, sentence):
         self.sentence = sentence
@@ -88,7 +89,7 @@ class SentenceProcessor:
 
 
 class Lemmatizer:
-    """split the document into sentences and tokenize each sentence."""
+    """Lemmatize a list of tokens, relying on the Part Of Speech tag."""
 
     def __init__(self):
         self.lemmatizer = WordNetLemmatizer()
@@ -99,7 +100,8 @@ class Lemmatizer:
 
     @staticmethod
     def get_wordnet_pos(treebank_tag: str) -> str:
-        """return the WORDNET POS equivalent to the given treebank tag.
+        """return the wordnet Part of Speech (POS) tag equivalent to the given
+        treebank POS tag.
 
         Args:
             treebank_tag: string representing a treebank tag.
@@ -122,11 +124,13 @@ class Lemmatizer:
     def get_lemma(self, word_postag_combo: Tuple[str, str]) -> str:
         """Return a lemma based on the original token and its POS tag.
 
-        For each token and its POS tag, the lemma is returned:
-            get_lemma(('I', 'PRP')) = "I"
-            get_lemma(('am', 'VBP')) = "be"
-            get_lemma(('an', 'DT')) = "an"
-            get_lemma(('engineer', 'NN')) = "engineer"
+        For each token and its POS tag, the lemma is returned.
+
+        Example returns:
+            * get_lemma(('I', 'PRP')) = "I"
+            * get_lemma(('am', 'VBP')) = "be"
+            * get_lemma(('an', 'DT')) = "an"
+            * get_lemma(('engineer', 'NN')) = "engineer"
 
         Args:
             word_postag_combo: Tuple containing the original token and it's treebank POS tag.
@@ -139,13 +143,10 @@ class Lemmatizer:
         )
 
     def lemmas(self, tokenized_sentence: List[str]) -> List[str]:
-        """Return a list lemmas in the sentence.
-
-        These lemmas are derived using the lemmatizer passed on in the initialisation of the Sentence instance,
-        which uses the POS-tag (Part Of Speech) to map each token to its lemma.
+        """Return a list lemmas in the given tokenized sentence.
 
         Example returns:
-            lemmas(["I", "am", "an", "engineer"]) = ["i", "be", "an", "engineer"]
+            * lemmas(["I", "am", "an", "engineer"]) = ["i", "be", "an", "engineer"]
 
         Args:
             tokenized_sentence: List of strings, representing the tokens of one sentence.

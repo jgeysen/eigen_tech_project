@@ -15,7 +15,7 @@ from eigen_tech_project.utils import no_stdout
 
 
 class InvertedIndex:
-    """Returns representation of the DataLoader object."""
+    """Create an inverted index for a collection of .txt documents."""
 
     def __init__(self, path):
         self.path = path
