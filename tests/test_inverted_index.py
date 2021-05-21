@@ -4,7 +4,7 @@ from pandas._testing import assert_frame_equal
 from eigen_tech_project.inverted_index import InvertedIndex
 
 
-def test_inverted_index(tmp_path):
+def test_InvertedIndex(tmp_path):
     d = tmp_path / "test_data"
     d.mkdir()
     p = d / "test_file1.txt"
@@ -19,6 +19,10 @@ def test_inverted_index(tmp_path):
     p.write_text(content)
 
     ii = InvertedIndex(path=d)
+    assert isinstance(ii, InvertedIndex)
+
+    assert ii.path == d
+
     assert ii.file_names == ["test_file1.txt"]
 
     raw_data_exp = [(1, content)]
@@ -34,7 +38,6 @@ def test_inverted_index(tmp_path):
         "In the face of despair, you believe there can be hope.",
         "But let me tell you how I came to be here.",
     ]
-
     sentences_exp = [(1, sentence) for sentence in sentences]
     assert ii.sentences == sentences_exp
 
@@ -46,7 +49,6 @@ def test_inverted_index(tmp_path):
         "despair",
         "",
     ]
-
     processed_sentences_exp = [
         sentences_exp[i] + (processed_sentences_exp[i],) for i in range(0, 6)
     ]
@@ -95,9 +97,10 @@ def test_inverted_index(tmp_path):
     ]
     documents = [{1}, {1}, {1}, {1}, {1}, {1}, {1}]
 
-    df_exp = pd.DataFrame(
-        list(zip(lemma, frequency, sentences, documents)),
-        columns=["lemma", "frequency", "sentences", "documents"],
+    assert_frame_equal(
+        ii.mapped_inverted_index(save=False),
+        pd.DataFrame(
+            list(zip(lemma, frequency, sentences, documents)),
+            columns=["lemma", "frequency", "sentences", "documents"],
+        ),
     )
-
-    assert_frame_equal(df_exp, ii.mapped_inverted_index(save=False))

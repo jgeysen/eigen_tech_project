@@ -14,8 +14,20 @@ stopwords = nltk.corpus.stopwords.words("english")
 
 
 class SentenceProcessor:
-    """Process a sentence using tokenization and lemmatization supported by
-    Part Of Speech tagging."""
+    """SentenceProcessor Class. Process a sentence using tokenization and
+    lemmatization supported by Part Of Speech tagging.
+
+    Default models and knowledge used whilst processing:
+    * NLTK sentence tokenizer (RegexpTokenizer)
+    * Wordnet lemmatizer with POS tagging
+    * stopwords provided by NLTK
+    * 1000 most common words to filter out noise
+
+    Args:
+        sentence: one sentence (string)
+    Returns:
+        The SentenceProcessor object instance
+    """
 
     def __init__(self, sentence):
         self.sentence = sentence
@@ -89,7 +101,12 @@ class SentenceProcessor:
 
 
 class Lemmatizer:
-    """Lemmatize a list of tokens, relying on the Part Of Speech tag."""
+    """Lemmatizer Class. Combine NLTK's WordNetLemmatizer with NLTK's Part Of
+    Speech tagging functionality.
+
+    Returns:
+        The Lemmatizer object instance
+    """
 
     def __init__(self):
         self.lemmatizer = WordNetLemmatizer()

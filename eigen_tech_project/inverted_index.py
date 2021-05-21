@@ -15,7 +15,17 @@ from eigen_tech_project.utils import no_stdout
 
 
 class InvertedIndex:
-    """Create an inverted index for a collection of .txt documents."""
+    """InvertedIndex god object. Instantiate this object with the dataset of
+    text files for which one wants to construct an inverted index.
+
+    * The path to the folder is relative to the current directory.
+    * The file names of the files in the folder will need to contain a unique number, as this is used as file identifier.
+
+    Args:
+        path: path to the folder is relative to the current directory, containing .txt files.
+    Returns:
+        The InvertedIndex god object instance
+    """
 
     def __init__(self, path):
         self.path = path
