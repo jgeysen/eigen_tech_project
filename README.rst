@@ -73,11 +73,6 @@ To activate the environment, again from the root directory of the repo:
     pipenv shell
 
 
-Credits
-#######
-
-This package was created with Cookiecutter and the `aj-cloete/pipenv-cookiecutter <https://github.com/aj-cloete/pipenv-cookiecutter>`_ project template.
-
 .. |GitHub Test| image:: https://github.com/jgeysen/eigen_tech_project/workflows/Test/badge.svg
    :target: https://github.com/jgeysen/eigen_tech_project/actions
    :alt: github-test
