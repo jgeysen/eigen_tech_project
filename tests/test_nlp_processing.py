@@ -1,31 +1,27 @@
-from eigen_tech_project.nlp_processing import Lemmatizer
-
-# from eigen_tech_project.nlp_processing import SentenceProcessor
+from eigen_tech_project.nlp_processing import Lemmatizer, SentenceProcessor
 
 
-def test_lemmatizer_lemmas():
+def test_Lemmatizer_lemmas():
     """Test the InvertedIndex class."""
     # given ...
-    # ... a mocked path containing a folder called "test_data"
-    # ... in this folder a mocked file called "test_file1.txt" containing a text with 7 sentences.
-    # then ..
-    # ... there are exactly 4 articles in the Article table
+    # ... a tokenized sentence: ["hello", "I", "am", "an", "engineer"]
     tokenized_sentence = ["hello", "I", "am", "an", "engineer"]
+    # ... an instance of the Lemmatizer class:
     lemmatizer = Lemmatizer()
 
+    assert isinstance(lemmatizer, Lemmatizer)
+
+    # then ..
+    # ... the lemmas property should contain a list of lemmas:
     lemmas = lemmatizer.lemmas(tokenized_sentence)
     lemmas_exp = ["hello", "I", "be", "an", "engineer"]
-
     assert lemmas == lemmas_exp
 
 
-def test_lemmatizer_get_wordnet_pos():
+def test_Lemmatizer_get_wordnet_pos():
     """Test the InvertedIndex class."""
     # given ...
-    # ... a mocked path containing a folder called "test_data"
-    # ... in this folder a mocked file called "test_file1.txt" containing a text with 7 sentences.
-    # then ..
-    # ... there are exactly 4 articles in the Article table
+    # ... a list of all possible treebank tags and their equivalen wordnet tags:
     treebank_tags = [
         "CC",
         "CD",
@@ -103,8 +99,13 @@ def test_lemmatizer_get_wordnet_pos():
         "n",
         "n",
     ]
-
+    # ... an instance of the Lemmatizer class:
     lemmatizer = Lemmatizer()
+    assert isinstance(lemmatizer, Lemmatizer)
+
+    # then ..
+    # ... the get_wordnet_pos attribute of the Lemmatizer class should map the treebank tags to their equivalen
+    # wordnet tags:
     equivalent_wordnet_tags_exp = [
         lemmatizer.get_wordnet_pos(treebank_tag) for treebank_tag in treebank_tags
     ]
@@ -113,4 +114,72 @@ def test_lemmatizer_get_wordnet_pos():
 
 
 def test_SentenceProcessor():
-    pass
+    # given ...
+    # ... a test_sentence:
+    test_sentence = (
+        "Let me begin by saying thanks to all you who have traveled, from far "
+        "and wide, to brave the cold today."
+    )
+    # ... an instance of the Lemmatizer class:
+    sp = SentenceProcessor(test_sentence)
+    assert isinstance(sp, SentenceProcessor)
+
+    # then ..
+    # ... the sentence property should contain the original sentence:
+    assert sp.sentence == test_sentence
+
+    # ... the tokenized_sentence property should contain the tokens of the original sentence:
+    assert sp.tokenized_sentence == [
+        "let",
+        "me",
+        "begin",
+        "by",
+        "saying",
+        "thanks",
+        "to",
+        "all",
+        "you",
+        "who",
+        "have",
+        "traveled",
+        "from",
+        "far",
+        "and",
+        "wide",
+        "to",
+        "brave",
+        "the",
+        "cold",
+        "today",
+    ]
+
+    # ... the lemmatized_sentence property should contain the lemmas of the original sentence:
+    assert sp.lemmatized_sentence == [
+        "let",
+        "me",
+        "begin",
+        "by",
+        "say",
+        "thanks",
+        "to",
+        "all",
+        "you",
+        "who",
+        "have",
+        "travel",
+        "from",
+        "far",
+        "and",
+        "wide",
+        "to",
+        "brave",
+        "the",
+        "cold",
+        "today",
+    ]
+
+    # ... the lemmatized_sentence_no_stop property should contain the interesting lemmas of the original sentence:
+    assert sp.lemmatized_sentence_no_stop == ["thanks", "brave", "today"]
+
+    # ... the processed_sentence property should contain a concatenation of the lemmatized_sentence_no_stop:
+    assert sp.processed_sentence == "thanks brave today"

@@ -29,16 +29,16 @@ def test_InvertedIndex(tmp_path):
     assert ii.path == d
 
     # then ..
-    # ... there are exactly 4 articles in the Article table
+    # ... the file names property should return the name of our mocked file:
     assert ii.file_names == ["test_file1.txt"]
 
     # then ..
-    # ... there are exactly 4 articles in the Article table
+    # ... the raw_data property should contain the file identifier (1) and the content string:
     raw_data_exp = [(1, content)]
     assert ii.raw_data == raw_data_exp
 
     # then ..
-    # ... there are exactly 4 articles in the Article table
+    # ... the sentences property should map to the following hardcoded sentences:
     sentences = [
         "Let me begin by saying thanks to all you who've traveled, from far and wide, "
         "to brave the cold today.",
@@ -53,7 +53,7 @@ def test_InvertedIndex(tmp_path):
     assert ii.sentences == sentences_exp
 
     # then ..
-    # ... there are exactly 4 articles in the Article table
+    # ... the processed_sentences property should contain the interesting lemmas for each sentence:
     processed_sentences_exp = [
         "thanks brave today",
         "journey",
@@ -68,7 +68,8 @@ def test_InvertedIndex(tmp_path):
     assert ii.processed_sentences == processed_sentences_exp
 
     # then ..
-    # ... there are exactly 4 articles in the Article table
+    # ... the vocabulary property should contain an alphabetically ordered set of the interesting lemmas in
+    # the entire corpus (across documents and sentences).
     vocabulary_exp = [
         "brave",
         "despair",
@@ -81,24 +82,27 @@ def test_InvertedIndex(tmp_path):
     assert ii.vocabulary == vocabulary_exp
 
     # then ..
-    # ... there are exactly 4 articles in the Article table
+    # ... the lemma_frequencies property should contain the frequency of occurence of each word in the vocabulary
+    # across the entire corpus (documents and sentences).
     frequencies_exp = [1] * 7
     assert ii.lemma_frequencies == frequencies_exp
 
     # then ..
-    # ... there are exactly 4 articles in the Article table
+    # ... the lemma_occurence property should contain the sub-lists of ids of the sentences in which each word in the
+    # vocabulary occurs.
     lemma_occurrence_exp = [[0], [4], [2], [1], [3], [0], [0]]
     assert ii.lemma_occurrences == lemma_occurrence_exp
 
     # then ..
-    # ... there are exactly 4 articles in the Article table
+    # ... the inverted_index property should contain a list of tuples, mapping the vocabulary, frequencies and
+    # lemma_occurence:
     inverted_index_exp = list(
         zip(vocabulary_exp, frequencies_exp, lemma_occurrence_exp)
     )
     assert ii.inverted_index == inverted_index_exp
 
     # then ..
-    # ... there are exactly 4 articles in the Article table
+    # ... the mapped_inverted_index DataFrame should contain the following data:
     lemma = ["brave", "despair", "humble", "journey", "peace", "thanks", "today"]
     frequency = [1, 1, 1, 1, 1, 1, 1]
     sentences = [
