@@ -7,6 +7,9 @@ Eigen_Tech_NLP_Project
 NLP project which leverages a.o. NLTK and Sklearn to create an (in memory) inverted index for a collection of
 .txt files containing textual data.
 
+Installation:
+########
+
 Installation from source:
 =====================
 
@@ -39,7 +42,7 @@ Installation with pip:
     $ pip install -e git+ssh://git@github.com/jgeysen/eigen_tech_project.git@main#egg=eigen_tech_project
 
 Setup for development:
-=====================
+########
 
 Clone the public repository:
 
@@ -71,7 +74,7 @@ To activate the environment, again from the root directory of the repo:
 
 
 Credits
-=======
+#######
 
 This package was created with Cookiecutter and the `aj-cloete/pipenv-cookiecutter <https://github.com/aj-cloete/pipenv-cookiecutter>`_ project template.
 
