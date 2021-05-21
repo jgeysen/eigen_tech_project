@@ -13,7 +13,7 @@ Installation:
 Installation from source:
 =====================
 
-The source for Eigen_Tech_NLP_Project can be downloaded from the `Github repo`_:
+The source for Eigen_Tech_NLP_Project can be downloaded from this `Github repo`_:
 
 Clone the public repository:
 
@@ -71,6 +71,12 @@ To activate the environment, again from the root directory of the repo:
 .. code-block:: console
 
     pipenv shell
+
+To create and view the documentation:
+
+.. code-block:: console
+
+    pipenv run make_docs
 
 
 .. |GitHub Test| image:: https://github.com/jgeysen/eigen_tech_project/workflows/Test/badge.svg
