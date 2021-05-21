@@ -65,7 +65,9 @@ class InvertedIndex:
         format) and the corresponding file id.
 
         Example return:
-            [(1, "First sentence of the first document."), (1, "Second sentence of the first document."), ..., (n, "m-th sentence of the n-th document.")]
+            [(1, "First sentence of the first document."),
+            (1, "Second sentence of the first document."),
+            ..., (n, "m-th sentence of the n-th document.")]
 
         Returns:
             List: List of tuples containing the file id and the sentences for the files in the path
@@ -86,7 +88,9 @@ class InvertedIndex:
         file id.
 
         Example return:
-            [(1, "First sentence of the first document.", "first sentence first document"), (1, "Second sentence of the first document.", "second sentence second document"), ..., (n, "Last sentence of the last document.", "last sentence last document")]
+            [(1, "First sentence of the first document.", "first sentence first document"),
+            (1, "Second sentence of the first document.", "second sentence second document"),
+            ..., (n, "Last sentence of the last document.", "last sentence last document")]
 
         Returns:
             List: List of tuples containing the file id and the sentences for the files in the path
@@ -110,9 +114,10 @@ class InvertedIndex:
 
     @cached_property
     def document_term_matrix(self) -> csr_matrix:
-        """Returns sparse matrix (scipy.sparse.csr_matrix) of size (number of
-        sentences x size of vocabulary), mapping for each sentence the
-        occurrence of each word in the vocabulary.
+        """Returns sparse document-term matrix (scipy.sparse.csr_matrix).
+
+        The document-term matrix is of size (number of sentences x size of vocabulary) and maps for each sentence the
+        occurrence of each vocabulary word.
 
         Returns:
             csr_matrix: sparse document-term matrix.
@@ -121,68 +126,82 @@ class InvertedIndex:
         return self.count_vectorizer.transform(data)
 
     @cached_property
-    def vocabulary(self) -> List:
-        """Returns the contents of each document in list of tuples.
+    def vocabulary(self) -> List[str]:
+        """Returns list of unique words that occur in the data.
+
+        The words in this list are processed, meaning that the lemma representation of the original token is used.
+        The list is ordered alphabetically and maps 1-1 to the columns of the document-term matrix.
 
         Example return:
-            [(1, "The contents of the first document"), ..., (n, "The contents of the n-th document.")]
+            ["abandon", "ability", "abroad", ..., "zone"]
 
         Returns:
-            List: Tupled list containing the id and contents of the documents in path given at InvertedIndex
-            initialisation.
+            List: List containing the lemmatized vocabulary.
         """
         return self.count_vectorizer.get_feature_names()
 
     @cached_property
     def lemma_frequencies(self) -> List:
-        """Returns the contents of each document in list of tuples.
+        """Returns a list of integers, representing the frequency that each
+        word occurs in the vocabulary.
+
+        The position of each integer in this list corresponds a lemma in the
+        alphabetical vocabulary list (with the same respective position). The integers represent the frequency
+        a lemma occurs in the entire corpus (across sentences and files).
 
         Example return:
-            [(1, "The contents of the first document"), ..., (n, "The contents of the n-th document.")]
+            [4, 1, 1, ..., 2]
 
         Returns:
-            List: Tupled list containing the id and contents of the documents in path given at InvertedIndex
-            initialisation.
+            List: List of integers, representing word frequency.
         """
         return self.document_term_matrix.sum(axis=0).tolist()[0]
 
     @cached_property
-    def lemma_occurrences(self) -> List[List]:
-        """Returns the contents of each document in list of tuples.
+    def lemma_occurrences(self) -> List[List[int]]:
+        """Returns the a list of lists, containing sentence ids.
+
+        This list has a length equal to the vocabulary size. The position of each sublist in this
+        list maps directly to a lemma (with the same, alphabetical position) in the vocabulary list.
+        The sublist here represents a collection of the sentence ids in which a lemma occurs.
+        These sentence ids correspond to rows in the sentence-term matrix.
 
         Example return:
-            [(1, "The contents of the first document"), ..., (n, "The contents of the n-th document.")]
+            [[1, 5, 29, 84], [1], ..., [128, 356]]
 
         Returns:
-            List: Tupled list containing the id and contents of the documents in path given at InvertedIndex
-            initialisation.
+            List: List of lists, each containing sentence ids mapping the vocabulary to the sentences.
         """
         return self.document_term_matrix.transpose().tolil().rows.tolist()
 
     @cached_property
     def inverted_index(self) -> List[Tuple[str, int, set]]:
-        """Returns the contents of each document in list of tuples.
+        """Returns a list of tuples, each containing a lemma, the total
+        frequency of that lemma in the corpus and a collection of the sentence
+        ids that lemma occurs in.
+
+        A mapping between a lemma and the documents (in this case: sentences) that lemma occurs in, is called an
+        inverted index.
 
         Example return:
-            [(1, "The contents of the first document"), ..., (n, "The contents of the n-th document.")]
+            [("abandon", 2, [1, 5, 29, 84]), ..., ("zone", 2, [128, 356])]
 
         Returns:
-            List: Tupled list containing the id and contents of the documents in path given at InvertedIndex
-            initialisation.
+            List: List of tuples, mapping vocabulary to frequency to sentence ids.
         """
         return list(
             zip(self.vocabulary, self.lemma_frequencies, self.lemma_occurrences)
         )
 
-    def mapped_inverted_index(self, save=True):
-        """Returns the contents of each document in list of tuples.
+    def mapped_inverted_index(self, save: bool = False) -> pd.DataFrame:
+        """Returns a dataframe mapping the inverted index back to the original
+        sentences.
 
-        Example return:
-            [(1, "The contents of the first document"), ..., (n, "The contents of the n-th document.")]
-
+        Args:
+            save: Boolean, indicating if one wants to directly save the mapped_inverted_index into a .csv file
+            in the current directory.
         Returns:
-            List: Tupled list containing the id and contents of the documents in path given at InvertedIndex
-            initialisation.
+            pd.DataFrame():
         """
         df_input = pd.DataFrame(
             self.processed_sentences,
