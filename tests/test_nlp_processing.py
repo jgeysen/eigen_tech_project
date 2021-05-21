@@ -4,6 +4,12 @@ from eigen_tech_project.nlp_processing import Lemmatizer
 
 
 def test_lemmatizer_lemmas():
+    """Test the InvertedIndex class."""
+    # given ...
+    # ... a mocked path containing a folder called "test_data"
+    # ... in this folder a mocked file called "test_file1.txt" containing a text with 7 sentences.
+    # then ..
+    # ... there are exactly 4 articles in the Article table
     tokenized_sentence = ["hello", "I", "am", "an", "engineer"]
     lemmatizer = Lemmatizer()
 
@@ -14,6 +20,12 @@ def test_lemmatizer_lemmas():
 
 
 def test_lemmatizer_get_wordnet_pos():
+    """Test the InvertedIndex class."""
+    # given ...
+    # ... a mocked path containing a folder called "test_data"
+    # ... in this folder a mocked file called "test_file1.txt" containing a text with 7 sentences.
+    # then ..
+    # ... there are exactly 4 articles in the Article table
     treebank_tags = [
         "CC",
         "CD",
@@ -100,5 +112,5 @@ def test_lemmatizer_get_wordnet_pos():
     assert equivalent_wordnet_tags == equivalent_wordnet_tags_exp
 
 
-def test_sentence_processor():
+def test_SentenceProcessor():
     pass

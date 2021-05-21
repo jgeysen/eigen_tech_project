@@ -68,16 +68,28 @@ class SentenceProcessor:
         return self.lemmatizer.lemmas(self.tokenized_sentence)
 
     def remove_stopwords(self, text: List[str]) -> List[str]:
-        """return WORDNET POS compliance to WORDNET lemmatization (a,n,r,v)"""
+        """Return a reduced list of tokens: the interesting lemmas in the
+        sentence.
+
+        Stopwords and the 1000 most common words in the english language are combined to a list of 'noise'.
+        Any lemma in the input string is compared to this 'noise' list and thrown out if there's a match.
+
+        Example returns:
+            ["engineer"]
+
+        Returns:
+            List: List containing interesting lemmas.
+        """
         noise = set(self.stopwords + self.common_words)
         return [w for w in text if w not in noise and w.isalpha()]
 
     @property
     def lemmatized_sentence_no_stop(self) -> List[str]:
-        """Return a reduced list of interesting lemmas in the sentence.
+        """Return a reduced list of tokens: the interesting lemmas in the
+        sentence.
 
-        The stopwords and common words are removed from this list of lemmas, yielding only the 'interesting'
-        words in the document.
+        The stopwords and common words are removed from the list of lemmas, yielding only the 'interesting'
+        lemmas in the sentence.
 
         Example returns:
             ["engineer"]

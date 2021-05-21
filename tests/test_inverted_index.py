@@ -5,6 +5,10 @@ from eigen_tech_project.inverted_index import InvertedIndex
 
 
 def test_InvertedIndex(tmp_path):
+    """Test the InvertedIndex class."""
+    # given ...
+    # ... a mocked path containing a folder called "test_data"
+    # ... in this folder a mocked file called "test_file1.txt" containing a text with 7 sentences.
     d = tmp_path / "test_data"
     d.mkdir()
     p = d / "test_file1.txt"
@@ -18,16 +22,23 @@ def test_InvertedIndex(tmp_path):
     )
     p.write_text(content)
 
+    # when ... we create an InvertedIndex object for this mocked path:
     ii = InvertedIndex(path=d)
     assert isinstance(ii, InvertedIndex)
 
     assert ii.path == d
 
+    # then ..
+    # ... there are exactly 4 articles in the Article table
     assert ii.file_names == ["test_file1.txt"]
 
+    # then ..
+    # ... there are exactly 4 articles in the Article table
     raw_data_exp = [(1, content)]
     assert ii.raw_data == raw_data_exp
 
+    # then ..
+    # ... there are exactly 4 articles in the Article table
     sentences = [
         "Let me begin by saying thanks to all you who've traveled, from far and wide, "
         "to brave the cold today.",
@@ -41,6 +52,8 @@ def test_InvertedIndex(tmp_path):
     sentences_exp = [(1, sentence) for sentence in sentences]
     assert ii.sentences == sentences_exp
 
+    # then ..
+    # ... there are exactly 4 articles in the Article table
     processed_sentences_exp = [
         "thanks brave today",
         "journey",
@@ -54,6 +67,8 @@ def test_InvertedIndex(tmp_path):
     ]
     assert ii.processed_sentences == processed_sentences_exp
 
+    # then ..
+    # ... there are exactly 4 articles in the Article table
     vocabulary_exp = [
         "brave",
         "despair",
@@ -65,17 +80,25 @@ def test_InvertedIndex(tmp_path):
     ]
     assert ii.vocabulary == vocabulary_exp
 
+    # then ..
+    # ... there are exactly 4 articles in the Article table
     frequencies_exp = [1] * 7
     assert ii.lemma_frequencies == frequencies_exp
 
+    # then ..
+    # ... there are exactly 4 articles in the Article table
     lemma_occurrence_exp = [[0], [4], [2], [1], [3], [0], [0]]
     assert ii.lemma_occurrences == lemma_occurrence_exp
 
+    # then ..
+    # ... there are exactly 4 articles in the Article table
     inverted_index_exp = list(
         zip(vocabulary_exp, frequencies_exp, lemma_occurrence_exp)
     )
     assert ii.inverted_index == inverted_index_exp
 
+    # then ..
+    # ... there are exactly 4 articles in the Article table
     lemma = ["brave", "despair", "humble", "journey", "peace", "thanks", "today"]
     frequency = [1, 1, 1, 1, 1, 1, 1]
     sentences = [
