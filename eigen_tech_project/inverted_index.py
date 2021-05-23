@@ -9,8 +9,8 @@ from cached_property import cached_property
 from scipy.sparse import csr_matrix
 from sklearn.feature_extraction.text import CountVectorizer
 
-import eigen_tech_project.nlp.nlp_models  # noqa
-from eigen_tech_project.nlp.nlp_processing import SentenceProcessor
+import eigen_tech_project.nlp.models  # noqa
+from eigen_tech_project.nlp.processing import SentenceProcessor
 from eigen_tech_project.utils.errors import (
     FileNameContainsNoNumberError,
     FileNumbersNotUniqueError,

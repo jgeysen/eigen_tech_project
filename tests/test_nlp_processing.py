@@ -1,4 +1,4 @@
-from eigen_tech_project.nlp.nlp_processing import Lemmatizer, SentenceProcessor
+from eigen_tech_project.nlp.processing import Lemmatizer, SentenceProcessor
 
 
 def test_Lemmatizer_lemmas():
