@@ -22,7 +22,7 @@ class NoTXTFilesWithContentInDirectoryError(Exception):
         return "<{}: {}>".format(self.__class__.__name__, self.errmsg)
 
 
-class FileNameHasNoNumberError(Exception):
+class FileNameContainsNoNumberError(Exception):
     def __init__(self):
         self.errmsg = "One or more file names contain no numbers."
 

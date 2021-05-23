@@ -9,17 +9,17 @@ from cached_property import cached_property
 from scipy.sparse import csr_matrix
 from sklearn.feature_extraction.text import CountVectorizer
 
-import eigen_tech_project.nlp_models  # noqa
-from eigen_tech_project.errors import (
-    FileNameHasNoNumberError,
+import eigen_tech_project.nlp.nlp_models  # noqa
+from eigen_tech_project.nlp.nlp_processing import SentenceProcessor
+from eigen_tech_project.utils.errors import (
+    FileNameContainsNoNumberError,
     FileNumbersNotUniqueError,
     NoFilesInDirectoryError,
     NoInterestingSentencesError,
     NoTXTFilesInDirectoryError,
     NoTXTFilesWithContentInDirectoryError,
 )
-from eigen_tech_project.nlp_processing import SentenceProcessor
-from eigen_tech_project.utils import no_stdout
+from eigen_tech_project.utils.utils import no_stdout
 
 
 class InvertedIndex:
@@ -83,8 +83,8 @@ class InvertedIndex:
         """
         file_indices_str = [re.sub("[^0-9]", "", f) for f in self.file_names]
         file_indices_int = [int(f) for f in file_indices_str if f.isdigit()]
-        if len(file_indices_int) < len(self.file_names):
-            raise FileNameHasNoNumberError
+        if len(file_indices_int) != len(self.file_names):
+            raise FileNameContainsNoNumberError
         if len(file_indices_int) != len(set(file_indices_int)):
             raise FileNumbersNotUniqueError
         else:
@@ -130,14 +130,10 @@ class InvertedIndex:
             List: List of tuples containing the file id and the sentences for the files in the path
             given at initialisation of the InvertedIndex instance.
         """
-        processed_sentences = [
+        return [
             sentence + (self.sentence_processor(sentence[1]).processed_sentence,)
             for sentence in self.sentences
         ]
-        if sum([len(x[2]) for x in processed_sentences]) == 0:
-            raise NoInterestingSentencesError
-        else:
-            return processed_sentences
 
     @cached_property
     def count_vectorizer(self):
@@ -148,7 +144,10 @@ class InvertedIndex:
             CountVectorizer(): instance of the sklearn's CountVectorizer class, fitted on the processed sentences.
         """
         data = [x[2] for x in self.processed_sentences]
-        return CountVectorizer().fit(data)
+        if sum([len(x) for x in data]) == 0:
+            raise NoInterestingSentencesError
+        else:
+            return CountVectorizer().fit(data)
 
     @cached_property
     def document_term_matrix(self) -> csr_matrix:

@@ -2,15 +2,15 @@ import pandas as pd
 import pytest
 from pandas._testing import assert_frame_equal
 
-from eigen_tech_project.errors import (
-    FileNameHasNoNumberError,
+from eigen_tech_project.inverted_index import InvertedIndex
+from eigen_tech_project.utils.errors import (
+    FileNameContainsNoNumberError,
     FileNumbersNotUniqueError,
     NoFilesInDirectoryError,
     NoInterestingSentencesError,
     NoTXTFilesInDirectoryError,
     NoTXTFilesWithContentInDirectoryError,
 )
-from eigen_tech_project.inverted_index import InvertedIndex
 
 
 def test_InvertedIndex(tmp_path):
@@ -195,9 +195,12 @@ def test_InvertedIndex_only_empty_txt_files_in_directory(tmp_path):
     # ... in this folder a mocked file called "test_file1.txt" containing a text with 7 sentences.
     d = tmp_path / "test_data"
     d.mkdir()
-    p = d / "test_file1.txt"
+    p1 = d / "test_file1.txt"
     content = ""
-    p.write_text(content)
+    p1.write_text(content)
+    p2 = d / "test_file2.txt"
+    content = ""
+    p2.write_text(content)
 
     # when ... we create an InvertedIndex object for this mocked path:
     with pytest.raises(NoTXTFilesWithContentInDirectoryError):
@@ -246,11 +249,11 @@ def test_InvertedIndex_file_name_no_number(tmp_path):
     )
     p1.write_text(content)
     # when ... we create an InvertedIndex object for this mocked path:
-    with pytest.raises(FileNameHasNoNumberError):
+    with pytest.raises(FileNameContainsNoNumberError):
         InvertedIndex(path=d)
 
 
-def test_InvertedIndex_only_noise_in_files(tmp_path):
+def test_InvertedIndex_no_interesting_content_in_files(tmp_path):
     """Test the InvertedIndex class."""
     # given ...
     # ... a mocked path containing a folder called "test_data"
@@ -260,6 +263,13 @@ def test_InvertedIndex_only_noise_in_files(tmp_path):
     p1 = d / "test_file1.txt"
     content = "The of to and a in is it you. That he was for on are with as I his they."
     p1.write_text(content)
+    p2 = d / "test_file2.txt"
+    content = (
+        "Come did number sound no most people my over know water than call first who may. "
+        "down side been now find any new work part take get place made live where. After "
+        "back little only round man year came show every good."
+    )
+    p2.write_text(content)
     # when ... we create an InvertedIndex object for this mocked path:
     with pytest.raises(NoInterestingSentencesError):
         InvertedIndex(path=d)
