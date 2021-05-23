@@ -1,6 +1,15 @@
 import pandas as pd
+import pytest
 from pandas._testing import assert_frame_equal
 
+from eigen_tech_project.errors import (
+    FileNameHasNoNumberError,
+    FileNumbersNotUniqueError,
+    NoFilesInDirectoryError,
+    NoInterestingSentencesError,
+    NoTXTFilesInDirectoryError,
+    NoTXTFilesWithContentInDirectoryError,
+)
 from eigen_tech_project.inverted_index import InvertedIndex
 
 
@@ -131,3 +140,126 @@ def test_InvertedIndex(tmp_path):
             columns=["lemma", "frequency", "sentences", "documents"],
         ),
     )
+
+
+def test_InvertedIndex_not_a_directory(tmp_path):
+    # given ...
+    # ... a mocked path containing a folder called "test_data"
+    # ... in this folder a mocked file called "test_file1.txt" containing a text with 7 sentences.
+    d = tmp_path / "test_data"
+    # when ... we create an InvertedIndex object for this mocked path:
+    with pytest.raises(FileNotFoundError):
+        InvertedIndex(path=d)
+
+
+def test_InvertedIndex_no_files_in_directory(tmp_path):
+    # given ...
+    # ... a mocked path containing a folder called "test_data"
+    # ... in this folder a mocked file called "test_file1.txt" containing a text with 7 sentences.
+    d = tmp_path / "test_data"
+    d.mkdir()
+    # when ... we create an InvertedIndex object for this mocked path:
+    with pytest.raises(NoFilesInDirectoryError):
+        InvertedIndex(path=d)
+
+
+def test_InvertedIndex_no_txt_files_in_directory(tmp_path):
+    """Test the InvertedIndex class."""
+    # given ...
+    # ... a mocked path containing a folder called "test_data"
+    # ... in this folder a mocked file called "test_file1.txt" containing a text with 7 sentences.
+    d = tmp_path / "test_data"
+    d.mkdir()
+    p = d / "test_file1.json"
+    content = """{
+              "Name": "Test",
+              "Mobile": 12345678,
+              "Boolean": True,
+              "Pets": ["Dog", "cat"],
+              "Address": {
+                "Permanent address": "USA",
+               "current Address": "AU"
+              }
+            }"""
+    p.write_text(content)
+
+    # when ... we create an InvertedIndex object for this mocked path:
+    with pytest.raises(NoTXTFilesInDirectoryError):
+        InvertedIndex(path=d)
+
+
+def test_InvertedIndex_only_empty_txt_files_in_directory(tmp_path):
+    """Test the InvertedIndex class."""
+    # given ...
+    # ... a mocked path containing a folder called "test_data"
+    # ... in this folder a mocked file called "test_file1.txt" containing a text with 7 sentences.
+    d = tmp_path / "test_data"
+    d.mkdir()
+    p = d / "test_file1.txt"
+    content = ""
+    p.write_text(content)
+
+    # when ... we create an InvertedIndex object for this mocked path:
+    with pytest.raises(NoTXTFilesWithContentInDirectoryError):
+        InvertedIndex(path=d)
+
+
+def test_InvertedIndex_file_numbers_not_unique(tmp_path):
+    """Test the InvertedIndex class."""
+    # given ...
+    # ... a mocked path containing a folder called "test_data"
+    # ... in this folder a mocked file called "test_file1.txt" containing a text with 7 sentences.
+    d = tmp_path / "test_data"
+    d.mkdir()
+    p1 = d / "test_file1.txt"
+    content = (
+        "Let me begin by saying thanks to all you who've traveled, from far and wide, "
+        "to brave the cold today. We all made this journey for a reason. It's humbling, "
+        "but in my heart I know you didn't come here just for me, you came here because "
+        "you believe in what this country can be."
+    )
+    p1.write_text(content)
+    p2 = d / "test_data1.txt"
+    content = (
+        "In the face of war, you believe there can be peace. In the face of despair, "
+        "you believe there can be hope. But let me tell you how I came to be here."
+    )
+    p2.write_text(content)
+    # when ... we create an InvertedIndex object for this mocked path:
+    with pytest.raises(FileNumbersNotUniqueError):
+        InvertedIndex(path=d)
+
+
+def test_InvertedIndex_file_name_no_number(tmp_path):
+    """Test the InvertedIndex class."""
+    # given ...
+    # ... a mocked path containing a folder called "test_data"
+    # ... in this folder a mocked file called "test_file1.txt" containing a text with 7 sentences.
+    d = tmp_path / "test_data"
+    d.mkdir()
+    p1 = d / "test_file.txt"
+    content = (
+        "Let me begin by saying thanks to all you who've traveled, from far and wide, "
+        "to brave the cold today. We all made this journey for a reason. It's humbling, "
+        "but in my heart I know you didn't come here just for me, you came here because "
+        "you believe in what this country can be."
+    )
+    p1.write_text(content)
+    # when ... we create an InvertedIndex object for this mocked path:
+    with pytest.raises(FileNameHasNoNumberError):
+        InvertedIndex(path=d)
+
+
+def test_InvertedIndex_only_noise_in_files(tmp_path):
+    """Test the InvertedIndex class."""
+    # given ...
+    # ... a mocked path containing a folder called "test_data"
+    # ... in this folder a mocked file called "test_file1.txt" containing a text with 7 sentences.
+    d = tmp_path / "test_data"
+    d.mkdir()
+    p1 = d / "test_file1.txt"
+    content = "The of to and a in is it you. That he was for on are with as I his they."
+    p1.write_text(content)
+    # when ... we create an InvertedIndex object for this mocked path:
+    with pytest.raises(NoInterestingSentencesError):
+        InvertedIndex(path=d)

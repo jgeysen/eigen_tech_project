@@ -1,6 +1,6 @@
 import re
 from os import listdir
-from os.path import abspath, isfile, join
+from os.path import abspath, getsize, isfile, join
 from typing import List, Tuple
 
 import nltk
@@ -10,6 +10,14 @@ from scipy.sparse import csr_matrix
 from sklearn.feature_extraction.text import CountVectorizer
 
 import eigen_tech_project.nlp_models  # noqa
+from eigen_tech_project.errors import (
+    FileNameHasNoNumberError,
+    FileNumbersNotUniqueError,
+    NoFilesInDirectoryError,
+    NoInterestingSentencesError,
+    NoTXTFilesInDirectoryError,
+    NoTXTFilesWithContentInDirectoryError,
+)
 from eigen_tech_project.nlp_processing import SentenceProcessor
 from eigen_tech_project.utils import no_stdout
 
@@ -48,7 +56,19 @@ class InvertedIndex:
         Returns:
             List: List containing the file names in strings.
         """
-        return [f for f in listdir(self.path) if isfile(join(self.path, f))]
+        file_names = [f for f in listdir(self.path) if isfile(join(self.path, f))]
+        if not file_names:
+            raise NoFilesInDirectoryError
+        txt_file_names = [f for f in file_names if f.endswith(".txt")]
+        if not txt_file_names:
+            raise NoTXTFilesInDirectoryError
+        non_empty_txt_file_names = [
+            f for f in txt_file_names if getsize(join(self.path, f)) != 0
+        ]
+        if not non_empty_txt_file_names:
+            raise NoTXTFilesWithContentInDirectoryError
+        else:
+            return non_empty_txt_file_names
 
     @cached_property
     def raw_data(self) -> List[Tuple[int, str]]:
@@ -61,13 +81,17 @@ class InvertedIndex:
             List: List of tuples containing the id and contents of the files in the path given at initialisation of the
             InvertedIndex instance.
         """
-        return [
-            (
-                int(re.sub("[^0-9]", "", f)),
-                open(abspath(join(self.path, f)), "r").read(),
-            )
-            for f in self.file_names
-        ]
+        file_indices_str = [re.sub("[^0-9]", "", f) for f in self.file_names]
+        file_indices_int = [int(f) for f in file_indices_str if f.isdigit()]
+        if len(file_indices_int) < len(self.file_names):
+            raise FileNameHasNoNumberError
+        if len(file_indices_int) != len(set(file_indices_int)):
+            raise FileNumbersNotUniqueError
+        else:
+            file_contents = [
+                open(abspath(join(self.path, f)), "r").read() for f in self.file_names
+            ]
+            return list(zip(file_indices_int, file_contents))
 
     @cached_property
     def sentences(self) -> List[Tuple[int, str]]:
@@ -106,10 +130,14 @@ class InvertedIndex:
             List: List of tuples containing the file id and the sentences for the files in the path
             given at initialisation of the InvertedIndex instance.
         """
-        return [
+        processed_sentences = [
             sentence + (self.sentence_processor(sentence[1]).processed_sentence,)
             for sentence in self.sentences
         ]
+        if sum([len(x[2]) for x in processed_sentences]) == 0:
+            raise NoInterestingSentencesError
+        else:
+            return processed_sentences
 
     @cached_property
     def count_vectorizer(self):
