@@ -1,6 +1,6 @@
 import re
 from os import listdir
-from os.path import abspath, getsize, isfile, join
+from os.path import getsize, isfile, join
 from typing import List, Tuple
 
 import nltk
@@ -26,11 +26,18 @@ class InvertedIndex:
     """InvertedIndex god object. Instantiate this object with the dataset of
     text files for which one wants to construct an inverted index.
 
-    * The path to the folder is relative to the current directory.
-    * The file names of the files in the folder will need to contain a unique number, as this is used as file identifier.
+    The path to the folder containing the data is a path relative to the current working directory. This path is
+    provided at initialisation of the InvertedIndex instance. The file names of the files in the
+    folder will need to adhere to following rules:
+    * All files to be taken into account for the index calculation, should be located in the folder.
+    * All files should be .txt files
+    * All file names should contain at least one unique digit or number, e.g.: file1.txt, file2.txt, file3.txt, etc.
+
+    If any of the above conditions is not met, an appropriate and indicative errors will be thrown
+    throughout the calculation of the solution.
 
     Args:
-        path: path to the folder is relative to the current directory, containing .txt files.
+        path: path to the folder is relative to the current working directory, containing .txt files.
     Returns:
         The InvertedIndex god object instance
     """
@@ -82,10 +89,10 @@ class InvertedIndex:
             InvertedIndex instance.
         """
         # strip file names from non-numerical characters
-        # [("file1.txt", "1"), ..., ("fileX.txt", "X")]
+        # E.g. [("file1.txt", "1"), ..., ("fileX.txt", "X")]
         file_name_to_nr_map = [(f, re.sub("[^0-9]", "", f)) for f in self.file_names]
         # Cast the non-numerical characters into int:
-        # [("file1.txt", 1), ..., ("fileX.txt", X)]
+        # E.g. [("file1.txt", 1), ..., ("fileX.txt", X)]
         file_name_to_nr_map = [
             (f[0], int(f[1])) for f in file_name_to_nr_map if f[1].isdigit()
         ]
@@ -98,15 +105,10 @@ class InvertedIndex:
         else:
             # get file contents for each file in the mapping:
             file_contents = [
-                open(abspath(join(self.path, f[0])), "r").read()
+                (f[1], open(join(self.path, f[0]), "r").read())
                 for f in file_name_to_nr_map
             ]
-            # isolate file numbers in the mapping:
-            file_nrs = [f[1] for f in file_name_to_nr_map]
-
-            # create mapping between numbers and file contents:
-            mapped_contents = list(zip(file_nrs, file_contents))
-            return sorted(mapped_contents, key=lambda x: x[0])
+            return sorted(file_contents, key=lambda x: x[0])
 
     @cached_property
     def sentences(self) -> List[Tuple[int, str]]:
