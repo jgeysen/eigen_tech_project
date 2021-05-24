@@ -161,6 +161,7 @@ class InvertedIndex:
             CountVectorizer(): instance of the sklearn's CountVectorizer class, fitted on the processed sentences.
         """
         data = [x[2] for x in self.processed_sentences]
+        # only fit the data to the Countvectorizer() when there is interesting data left after processing:
         if sum([len(x) for x in data]) == 0:
             raise NoInterestingSentencesError
         else:
