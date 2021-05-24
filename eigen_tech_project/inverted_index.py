@@ -88,27 +88,27 @@ class InvertedIndex:
             List: List of tuples containing the id and contents of the files in the path given at initialisation of the
             InvertedIndex instance.
         """
-        # strip file names from non-numerical characters
-        # E.g. [("file1.txt", "1"), ("file2.txt", "2"), ..., ("fileX.txt", "X")]
+        # strip non-numerical characters from file names, store as tuple:
+        # Output e.g.: [("file1.txt", "1"), ("file2.txt", "2"), ..., ("fileX.txt", "X")]
         file_name_to_nr_map = [(f, re.sub("[^0-9]", "", f)) for f in self.file_names]
-        # Cast the non-numerical characters into int:
-        # E.g. [("file1.txt", 1), ("file2.txt", 2), ..., ("fileX.txt", X)]
-        file_name_to_nr_map = [
-            (f[0], int(f[1])) for f in file_name_to_nr_map if f[1].isdigit()
-        ]
-        # All file names should have a mapping to a file number:
-        if [f[0] for f in file_name_to_nr_map] != self.file_names:
+
+        # All file names should contain a digit after stripping, otherwise raise error:
+        if False in [f[1].isdigit() for f in file_name_to_nr_map]:
             raise FileNameContainsNoNumberError
+
+        # Cast the numerical characters into an int:
+        # Output e.g.: [("file1.txt", 1), ("file2.txt", 2), ..., ("fileX.txt", X)]
+        file_name_to_nr_map = [(f[0], int(f[1])) for f in file_name_to_nr_map]
+
         # All file numbers in the mapping should be unique:
         if len({f[1] for f in file_name_to_nr_map}) != len(file_name_to_nr_map):
             raise FileNumbersNotUniqueError
-        else:
-            # read file contents for each file in the mapping:
-            file_contents = [
-                (f[1], open(join(self.path, f[0]), "r").read())
-                for f in file_name_to_nr_map
-            ]
-            return sorted(file_contents, key=lambda x: x[0])
+
+        # read file contents for each file in the mapping:
+        file_contents = [
+            (f[1], open(join(self.path, f[0]), "r").read()) for f in file_name_to_nr_map
+        ]
+        return sorted(file_contents, key=lambda x: x[0])
 
     @cached_property
     def sentences(self) -> List[Tuple[int, str]]:
