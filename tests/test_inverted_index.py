@@ -17,7 +17,7 @@ def test_InvertedIndex_class(tmp_path):
     """Test the InvertedIndex class."""
     # given ...
     # ... a mocked path containing a folder called "test_data"
-    # ... in this folder a mocked file called "test_file1.txt" containing a text with 7 sentences.
+    # ... in this folder a mocked file called "test_file1.txt" containing a text with 3 interesting sentences.
     d = tmp_path / "test_data"
     d.mkdir()
     p1 = d / "test_file1.txt"
@@ -28,17 +28,21 @@ def test_InvertedIndex_class(tmp_path):
         "you believe in what this country can be."
     )
     p1.write_text(content1)
+    # ... in this folder a mocked file called "test_file2.txt" containing a text with 3 interesting sentences.
     p2 = d / "test_file2.txt"
     content2 = (
         "In the face of war, you believe there can be peace. In the face of despair, "
         "you believe there can be hope. But let me tell you how I came to be here."
     )
     p2.write_text(content2)
+    # ... in this folder a mocked file called "test_file3.txt" containing a text with 2 not interesting sentences.
+    # ... These sentences are entirely made up out of common words and stop words.
     p3 = d / "test_file3.txt"
     content3 = (
         "The of to and a in is it you. That he was for on are with as I his they."
     )
     p3.write_text(content3)
+    # ... in this folder a mocked file called "test_file4.txt" containing a text with 0 sentences.
     p4 = d / "test_file4.txt"
     content4 = ""
     p4.write_text(content4)
@@ -50,17 +54,17 @@ def test_InvertedIndex_class(tmp_path):
     assert ii.path == d
 
     # then ..
-    # ... the file names property should return the name of our mocked file:
+    # ... the file names property should return the name of our mocked files:
     assert set(ii.file_names) == {"test_file1.txt", "test_file2.txt", "test_file3.txt"}
 
     # then ..
-    # ... the raw_data property should contain the file identifier (1) and the content string:
-    raw_data_exp = {(1, content1), (2, content2), (3, content3)}
-    assert set(ii.raw_data) == raw_data_exp
+    # ... the raw_data property should contain a mapping of the file number and the content string for each file:
+    raw_data_exp = [(1, content1), (2, content2), (3, content3)]
+    assert ii.raw_data == raw_data_exp
 
     # then ..
-    # ... the sentences property should map to the following hardcoded sentences:
-    sentences_exp = {
+    # ... the sentences property should map to the following hardcoded sentences and their file number:
+    sentences_exp = [
         (
             1,
             "Let me begin by saying thanks to all you who've traveled, from far and wide, "
@@ -77,12 +81,13 @@ def test_InvertedIndex_class(tmp_path):
         (2, "But let me tell you how I came to be here."),
         (3, "The of to and a in is it you."),
         (3, "That he was for on are with as I his they."),
-    }
-    assert set(ii.sentences) == sentences_exp
+    ]
+    assert ii.sentences == sentences_exp
 
     # then ..
-    # ... the processed_sentences property should contain the interesting lemmas for each sentence:
-    processed_sentences_exp = {
+    # ... the processed_sentences property should contain the file number, the original sentence and
+    # ... the interesting lemmas for each sentence:
+    processed_sentences_exp = [
         (
             1,
             "Let me begin by saying thanks to all you who've traveled, from far and wide, "
@@ -101,8 +106,8 @@ def test_InvertedIndex_class(tmp_path):
         (2, "But let me tell you how I came to be here.", ""),
         (3, "The of to and a in is it you.", ""),
         (3, "That he was for on are with as I his they.", ""),
-    }
-    assert set(ii.processed_sentences) == processed_sentences_exp
+    ]
+    assert ii.processed_sentences == processed_sentences_exp
 
     # then ..
     # ... the vocabulary property should contain an alphabetically ordered set of the interesting lemmas in
@@ -119,13 +124,13 @@ def test_InvertedIndex_class(tmp_path):
     assert ii.vocabulary == vocabulary_exp
 
     # then ..
-    # ... the lemma_frequencies property should contain the frequency of occurence of each word in the vocabulary
+    # ... the lemma_frequencies property should contain the frequency of occurrence of each word in the vocabulary
     # across the entire corpus (documents and sentences).
     frequencies_exp = [1] * 7
     assert ii.lemma_frequencies == frequencies_exp
 
     # then ..
-    # ... the lemma_occurence property should contain the sub-lists of ids of the sentences in which each word in the
+    # ... the lemma_occurrence property should contain the sub-lists of ids of the sentences in which each word in the
     # vocabulary occurs.
     lemma_occurrence_exp = [[0], [4], [2], [1], [3], [0], [0]]
     assert ii.lemma_occurrences == lemma_occurrence_exp
@@ -172,21 +177,19 @@ def test_InvertedIndex_class(tmp_path):
 
 def test_InvertedIndex_not_a_directory(tmp_path):
     # given ...
-    # ... a mocked path containing a folder called "test_data"
-    # ... in this folder a mocked file called "test_file1.txt" containing a text with 7 sentences.
+    # ... an path to a folder which is not mocked (we're not running the mkdir() command here):
     d = tmp_path / "test_data"
-    # when ... we create an InvertedIndex object for this mocked path:
+    # when ... we create an InvertedIndex object for this imaginary path, a 'FileNotFoundError' should be thrown:
     with pytest.raises(FileNotFoundError):
         InvertedIndex(path=d)
 
 
 def test_InvertedIndex_no_files_in_directory(tmp_path):
     # given ...
-    # ... a mocked path containing a folder called "test_data"
-    # ... in this folder a mocked file called "test_file1.txt" containing a text with 7 sentences.
+    # ... a mocked path containing an empty folder called "test_data"
     d = tmp_path / "test_data"
     d.mkdir()
-    # when ... we create an InvertedIndex object for this mocked path:
+    # when ... we create an InvertedIndex object for this mocked path, a NoFilesInDirectoryError should be thrown:
     with pytest.raises(NoFilesInDirectoryError):
         InvertedIndex(path=d)
 
@@ -195,7 +198,7 @@ def test_InvertedIndex_no_txt_files_in_directory(tmp_path):
     """Test the InvertedIndex class."""
     # given ...
     # ... a mocked path containing a folder called "test_data"
-    # ... in this folder a mocked file called "test_file1.txt" containing a text with 7 sentences.
+    # ... in this folder a mocked file called "test_file1.json" (so not a .txt file).
     d = tmp_path / "test_data"
     d.mkdir()
     p = d / "test_file1.json"
@@ -211,7 +214,7 @@ def test_InvertedIndex_no_txt_files_in_directory(tmp_path):
             }"""
     p.write_text(content)
 
-    # when ... we create an InvertedIndex object for this mocked path:
+    # when ... we create an InvertedIndex object for this mocked path, a NoTXTFilesInDirectoryError should be thrown:
     with pytest.raises(NoTXTFilesInDirectoryError):
         InvertedIndex(path=d)
 
@@ -220,7 +223,7 @@ def test_InvertedIndex_only_empty_txt_files_in_directory(tmp_path):
     """Test the InvertedIndex class."""
     # given ...
     # ... a mocked path containing a folder called "test_data"
-    # ... in this folder a mocked file called "test_file1.txt" containing a text with 7 sentences.
+    # ... in this folder a number of mocked (although empty) .txt-files called are added:
     d = tmp_path / "test_data"
     d.mkdir()
     p1 = d / "test_file1.txt"
@@ -230,7 +233,8 @@ def test_InvertedIndex_only_empty_txt_files_in_directory(tmp_path):
     content = ""
     p2.write_text(content)
 
-    # when ... we create an InvertedIndex object for this mocked path:
+    # when ... we create an InvertedIndex object for this mocked path. a NoTXTFilesWithContentInDirectoryError
+    # should be thrown:
     with pytest.raises(NoTXTFilesWithContentInDirectoryError):
         InvertedIndex(path=d)
 
@@ -239,7 +243,7 @@ def test_InvertedIndex_file_numbers_not_unique(tmp_path):
     """Test the InvertedIndex class."""
     # given ...
     # ... a mocked path containing a folder called "test_data"
-    # ... in this folder a mocked file called "test_file1.txt" containing a text with 7 sentences.
+    # ... in this folder two mocked files with the same number (1) in the file name are mocked:
     d = tmp_path / "test_data"
     d.mkdir()
     p1 = d / "test_file1.txt"
@@ -254,7 +258,7 @@ def test_InvertedIndex_file_numbers_not_unique(tmp_path):
         "you believe there can be hope."
     )
     p2.write_text(content)
-    # when ... we create an InvertedIndex object for this mocked path:
+    # when ... we create an InvertedIndex object for this mocked path, a FileNumbersNotUniqueError should be thrown:
     with pytest.raises(FileNumbersNotUniqueError):
         InvertedIndex(path=d)
 
@@ -263,7 +267,7 @@ def test_InvertedIndex_file_name_no_number(tmp_path):
     """Test the InvertedIndex class."""
     # given ...
     # ... a mocked path containing a folder called "test_data"
-    # ... in this folder a mocked file called "test_file1.txt" containing a text with 7 sentences.
+    # ... in this folder a mocked file called "test_file.txt" containing a text with 2 sentences.
     d = tmp_path / "test_data"
     d.mkdir()
     p1 = d / "test_file.txt"
@@ -272,7 +276,7 @@ def test_InvertedIndex_file_name_no_number(tmp_path):
         "to brave the cold today. We all made this journey for a reason."
     )
     p1.write_text(content)
-    # when ... we create an InvertedIndex object for this mocked path:
+    # when ... we create an InvertedIndex object for this mocked path, a FileNameContainsNoNumberError should be thrown:
     with pytest.raises(FileNameContainsNoNumberError):
         InvertedIndex(path=d)
 
@@ -281,7 +285,7 @@ def test_InvertedIndex_no_interesting_content_in_files(tmp_path):
     """Test the InvertedIndex class."""
     # given ...
     # ... a mocked path containing a folder called "test_data"
-    # ... in this folder a mocked file called "test_file1.txt" containing a text with 7 sentences.
+    # ... in this folder a number of mocked files containing of stopwords and common words are added:
     d = tmp_path / "test_data"
     d.mkdir()
     p1 = d / "test_file1.txt"
@@ -290,6 +294,6 @@ def test_InvertedIndex_no_interesting_content_in_files(tmp_path):
     p2 = d / "test_file2.txt"
     content = "Come did number sound no most people. My over know water than call first who may."
     p2.write_text(content)
-    # when ... we create an InvertedIndex object for this mocked path:
+    # when ... we create an InvertedIndex object for this mocked path, a NoInterestingSentencesError should be thrown:
     with pytest.raises(NoInterestingSentencesError):
         InvertedIndex(path=d)

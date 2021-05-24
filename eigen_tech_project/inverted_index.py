@@ -89,21 +89,21 @@ class InvertedIndex:
             InvertedIndex instance.
         """
         # strip file names from non-numerical characters
-        # E.g. [("file1.txt", "1"), ..., ("fileX.txt", "X")]
+        # E.g. [("file1.txt", "1"), ("file2.txt", 2), ..., ("fileX.txt", "X")]
         file_name_to_nr_map = [(f, re.sub("[^0-9]", "", f)) for f in self.file_names]
         # Cast the non-numerical characters into int:
-        # E.g. [("file1.txt", 1), ..., ("fileX.txt", X)]
+        # E.g. [("file1.txt", 1), ("file2.txt", 2), ..., ("fileX.txt", X)]
         file_name_to_nr_map = [
             (f[0], int(f[1])) for f in file_name_to_nr_map if f[1].isdigit()
         ]
-        # All file names should be mapped:
+        # All file names should have a mapping to a file number:
         if [f[0] for f in file_name_to_nr_map] != self.file_names:
             raise FileNameContainsNoNumberError
-        # All file numbers should be unique:
+        # All file numbers in the mapping should be unique:
         if len({f[1] for f in file_name_to_nr_map}) != len(file_name_to_nr_map):
             raise FileNumbersNotUniqueError
         else:
-            # get file contents for each file in the mapping:
+            # read file contents for each file in the mapping:
             file_contents = [
                 (f[1], open(join(self.path, f[0]), "r").read())
                 for f in file_name_to_nr_map
