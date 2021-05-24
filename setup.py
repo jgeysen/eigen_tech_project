@@ -12,6 +12,7 @@ setup(
         "Natural Language :: English",
         "Programming Language :: Python :: 3.9",
     ],
+    dependency_links=[],
     description="NLP project which leverages a.o. NLTK and Sklearn to create an (in memory) inverted "
     "index for a collection of .txt-files containing textual data.",
     install_requires=["nltk", "pandas", "scikit-learn", "cached-property", "requests"],
