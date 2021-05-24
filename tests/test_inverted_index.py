@@ -127,7 +127,7 @@ def test_InvertedIndex_class(tmp_path):
     # then ..
     # ... the lemma_occurence property should contain the sub-lists of ids of the sentences in which each word in the
     # vocabulary occurs.
-    lemma_occurrence_exp = [[5], [1], [7], [6], [0], [5], [5]]
+    lemma_occurrence_exp = [[0], [4], [2], [1], [3], [0], [0]]
     assert ii.lemma_occurrences == lemma_occurrence_exp
 
     # then ..
@@ -245,15 +245,13 @@ def test_InvertedIndex_file_numbers_not_unique(tmp_path):
     p1 = d / "test_file1.txt"
     content = (
         "Let me begin by saying thanks to all you who've traveled, from far and wide, "
-        "to brave the cold today. We all made this journey for a reason. It's humbling, "
-        "but in my heart I know you didn't come here just for me, you came here because "
-        "you believe in what this country can be."
+        "to brave the cold today."
     )
     p1.write_text(content)
     p2 = d / "test_data1.txt"
     content = (
         "In the face of war, you believe there can be peace. In the face of despair, "
-        "you believe there can be hope. But let me tell you how I came to be here."
+        "you believe there can be hope."
     )
     p2.write_text(content)
     # when ... we create an InvertedIndex object for this mocked path:
@@ -271,9 +269,7 @@ def test_InvertedIndex_file_name_no_number(tmp_path):
     p1 = d / "test_file.txt"
     content = (
         "Let me begin by saying thanks to all you who've traveled, from far and wide, "
-        "to brave the cold today. We all made this journey for a reason. It's humbling, "
-        "but in my heart I know you didn't come here just for me, you came here because "
-        "you believe in what this country can be."
+        "to brave the cold today. We all made this journey for a reason."
     )
     p1.write_text(content)
     # when ... we create an InvertedIndex object for this mocked path:
@@ -292,11 +288,7 @@ def test_InvertedIndex_no_interesting_content_in_files(tmp_path):
     content = "The of to and a in is it you. That he was for on are with as I his they."
     p1.write_text(content)
     p2 = d / "test_file2.txt"
-    content = (
-        "Come did number sound no most people my over know water than call first who may. "
-        "down side been now find any new work part take get place made live where. After "
-        "back little only round man year came show every good."
-    )
+    content = "Come did number sound no most people. My over know water than call first who may."
     p2.write_text(content)
     # when ... we create an InvertedIndex object for this mocked path:
     with pytest.raises(NoInterestingSentencesError):

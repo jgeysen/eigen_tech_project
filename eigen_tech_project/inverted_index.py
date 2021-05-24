@@ -81,17 +81,32 @@ class InvertedIndex:
             List: List of tuples containing the id and contents of the files in the path given at initialisation of the
             InvertedIndex instance.
         """
-        file_indices_str = [re.sub("[^0-9]", "", f) for f in self.file_names]
-        file_indices_int = [int(f) for f in file_indices_str if f.isdigit()]
-        if len(file_indices_int) != len(self.file_names):
+        # strip file names from non-numerical characters
+        # [("file1.txt", "1"), ..., ("fileX.txt", "X")]
+        file_name_to_nr_map = [(f, re.sub("[^0-9]", "", f)) for f in self.file_names]
+        # Cast the non-numerical characters into int:
+        # [("file1.txt", 1), ..., ("fileX.txt", X)]
+        file_name_to_nr_map = [
+            (f[0], int(f[1])) for f in file_name_to_nr_map if f[1].isdigit()
+        ]
+        # All file names should be mapped:
+        if [f[0] for f in file_name_to_nr_map] != self.file_names:
             raise FileNameContainsNoNumberError
-        if len(file_indices_int) != len(set(file_indices_int)):
+        # All file numbers should be unique:
+        if len({f[1] for f in file_name_to_nr_map}) != len(file_name_to_nr_map):
             raise FileNumbersNotUniqueError
         else:
+            # get file contents for each file in the mapping:
             file_contents = [
-                open(abspath(join(self.path, f)), "r").read() for f in self.file_names
+                open(abspath(join(self.path, f[0])), "r").read()
+                for f in file_name_to_nr_map
             ]
-            return list(zip(file_indices_int, file_contents))
+            # isolate file numbers in the mapping:
+            file_nrs = [f[1] for f in file_name_to_nr_map]
+
+            # create mapping between numbers and file contents:
+            mapped_contents = list(zip(file_nrs, file_contents))
+            return sorted(mapped_contents, key=lambda x: x[0])
 
     @cached_property
     def sentences(self) -> List[Tuple[int, str]]:
