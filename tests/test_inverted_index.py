@@ -13,23 +13,35 @@ from eigen_tech_project.utils.errors import (
 )
 
 
-def test_InvertedIndex(tmp_path):
+def test_InvertedIndex_class(tmp_path):
     """Test the InvertedIndex class."""
     # given ...
     # ... a mocked path containing a folder called "test_data"
     # ... in this folder a mocked file called "test_file1.txt" containing a text with 7 sentences.
     d = tmp_path / "test_data"
     d.mkdir()
-    p = d / "test_file1.txt"
-    content = (
+    p1 = d / "test_file1.txt"
+    content1 = (
         "Let me begin by saying thanks to all you who've traveled, from far and wide, "
         "to brave the cold today. We all made this journey for a reason. It's humbling, "
         "but in my heart I know you didn't come here just for me, you came here because "
-        "you believe in what this country can be. In the face of war, you believe there "
-        "can be peace. In the face of despair, you believe there can be hope. But let me "
-        "tell you how I came to be here."
+        "you believe in what this country can be."
     )
-    p.write_text(content)
+    p1.write_text(content1)
+    p2 = d / "test_file2.txt"
+    content2 = (
+        "In the face of war, you believe there can be peace. In the face of despair, "
+        "you believe there can be hope. But let me tell you how I came to be here."
+    )
+    p2.write_text(content2)
+    p3 = d / "test_file3.txt"
+    content3 = (
+        "The of to and a in is it you. That he was for on are with as I his they."
+    )
+    p3.write_text(content3)
+    p4 = d / "test_file4.txt"
+    content4 = ""
+    p4.write_text(content4)
 
     # when ... we create an InvertedIndex object for this mocked path:
     ii = InvertedIndex(path=d)
@@ -39,42 +51,58 @@ def test_InvertedIndex(tmp_path):
 
     # then ..
     # ... the file names property should return the name of our mocked file:
-    assert ii.file_names == ["test_file1.txt"]
+    assert set(ii.file_names) == {"test_file1.txt", "test_file2.txt", "test_file3.txt"}
 
     # then ..
     # ... the raw_data property should contain the file identifier (1) and the content string:
-    raw_data_exp = [(1, content)]
-    assert ii.raw_data == raw_data_exp
+    raw_data_exp = {(1, content1), (2, content2), (3, content3)}
+    assert set(ii.raw_data) == raw_data_exp
 
     # then ..
     # ... the sentences property should map to the following hardcoded sentences:
-    sentences = [
-        "Let me begin by saying thanks to all you who've traveled, from far and wide, "
-        "to brave the cold today.",
-        "We all made this journey for a reason.",
-        "It's humbling, but in my heart I know you didn't come here just for me, you "
-        "came here because you believe in what this country can be.",
-        "In the face of war, you believe there can be peace.",
-        "In the face of despair, you believe there can be hope.",
-        "But let me tell you how I came to be here.",
-    ]
-    sentences_exp = [(1, sentence) for sentence in sentences]
-    assert ii.sentences == sentences_exp
+    sentences_exp = {
+        (
+            1,
+            "Let me begin by saying thanks to all you who've traveled, from far and wide, "
+            "to brave the cold today.",
+        ),
+        (1, "We all made this journey for a reason."),
+        (
+            1,
+            "It's humbling, but in my heart I know you didn't come here just for me, you "
+            "came here because you believe in what this country can be.",
+        ),
+        (2, "In the face of war, you believe there can be peace."),
+        (2, "In the face of despair, you believe there can be hope."),
+        (2, "But let me tell you how I came to be here."),
+        (3, "The of to and a in is it you."),
+        (3, "That he was for on are with as I his they."),
+    }
+    assert set(ii.sentences) == sentences_exp
 
     # then ..
     # ... the processed_sentences property should contain the interesting lemmas for each sentence:
-    processed_sentences_exp = [
-        "thanks brave today",
-        "journey",
-        "humble",
-        "peace",
-        "despair",
-        "",
-    ]
-    processed_sentences_exp = [
-        sentences_exp[i] + (processed_sentences_exp[i],) for i in range(0, 6)
-    ]
-    assert ii.processed_sentences == processed_sentences_exp
+    processed_sentences_exp = {
+        (
+            1,
+            "Let me begin by saying thanks to all you who've traveled, from far and wide, "
+            "to brave the cold today.",
+            "thanks brave today",
+        ),
+        (1, "We all made this journey for a reason.", "journey"),
+        (
+            1,
+            "It's humbling, but in my heart I know you didn't come here just for me, you "
+            "came here because you believe in what this country can be.",
+            "humble",
+        ),
+        (2, "In the face of war, you believe there can be peace.", "peace"),
+        (2, "In the face of despair, you believe there can be hope.", "despair"),
+        (2, "But let me tell you how I came to be here.", ""),
+        (3, "The of to and a in is it you.", ""),
+        (3, "That he was for on are with as I his they.", ""),
+    }
+    assert set(ii.processed_sentences) == processed_sentences_exp
 
     # then ..
     # ... the vocabulary property should contain an alphabetically ordered set of the interesting lemmas in
@@ -99,7 +127,7 @@ def test_InvertedIndex(tmp_path):
     # then ..
     # ... the lemma_occurence property should contain the sub-lists of ids of the sentences in which each word in the
     # vocabulary occurs.
-    lemma_occurrence_exp = [[0], [4], [2], [1], [3], [0], [0]]
+    lemma_occurrence_exp = [[5], [1], [7], [6], [0], [5], [5]]
     assert ii.lemma_occurrences == lemma_occurrence_exp
 
     # then ..
@@ -113,7 +141,7 @@ def test_InvertedIndex(tmp_path):
     # then ..
     # ... the mapped_inverted_index DataFrame should contain the following data:
     lemma = ["brave", "despair", "humble", "journey", "peace", "thanks", "today"]
-    frequency = [1, 1, 1, 1, 1, 1, 1]
+    frequency = [1] * 7
     sentences = [
         [
             "Let me begin by saying thanks to all you who've traveled, from far and wide, to brave the cold today."
@@ -131,7 +159,7 @@ def test_InvertedIndex(tmp_path):
             "Let me begin by saying thanks to all you who've traveled, from far and wide, to brave the cold today."
         ],
     ]
-    documents = [{1}, {1}, {1}, {1}, {1}, {1}, {1}]
+    documents = [{1}, {2}, {1}, {1}, {2}, {1}, {1}]
 
     assert_frame_equal(
         ii.mapped_inverted_index(save=False),
