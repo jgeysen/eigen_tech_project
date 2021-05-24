@@ -89,7 +89,7 @@ class InvertedIndex:
             InvertedIndex instance.
         """
         # strip file names from non-numerical characters
-        # E.g. [("file1.txt", "1"), ("file2.txt", 2), ..., ("fileX.txt", "X")]
+        # E.g. [("file1.txt", "1"), ("file2.txt", "2"), ..., ("fileX.txt", "X")]
         file_name_to_nr_map = [(f, re.sub("[^0-9]", "", f)) for f in self.file_names]
         # Cast the non-numerical characters into int:
         # E.g. [("file1.txt", 1), ("file2.txt", 2), ..., ("fileX.txt", X)]
