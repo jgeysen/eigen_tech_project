@@ -1,6 +1,6 @@
 import re
 from os import listdir
-from os.path import abspath, isfile, join
+from os.path import getsize, isfile, join
 from typing import List, Tuple
 
 import nltk
@@ -9,20 +9,35 @@ from cached_property import cached_property
 from scipy.sparse import csr_matrix
 from sklearn.feature_extraction.text import CountVectorizer
 
-import eigen_tech_project.nlp_models  # noqa
-from eigen_tech_project.nlp_processing import SentenceProcessor
-from eigen_tech_project.utils import no_stdout
+import eigen_tech_project.nlp.models  # noqa
+from eigen_tech_project.nlp.processing import SentenceProcessor
+from eigen_tech_project.utils.errors import (
+    FileNameContainsNoNumberError,
+    FileNumbersNotUniqueError,
+    NoFilesInDirectoryError,
+    NoInterestingSentencesError,
+    NoTXTFilesInDirectoryError,
+    NoTXTFilesWithContentInDirectoryError,
+)
+from eigen_tech_project.utils.utils import no_stdout
 
 
 class InvertedIndex:
     """InvertedIndex god object. Instantiate this object with the dataset of
     text files for which one wants to construct an inverted index.
 
-    * The path to the folder is relative to the current directory.
-    * The file names of the files in the folder will need to contain a unique number, as this is used as file identifier.
+    The path to the folder containing the data is a path relative to the current working directory. This path is
+    provided at initialisation of the InvertedIndex instance. The file names of the files in the
+    folder will need to adhere to following rules:
+    * All files to be taken into account for the index calculation, should be located in the folder.
+    * All files should be .txt files
+    * All file names should contain at least one unique digit or number, e.g.: file1.txt, file2.txt, file3.txt, etc.
+
+    If any of the above conditions is not met, an appropriate and indicative errors will be thrown
+    throughout the calculation of the solution.
 
     Args:
-        path: path to the folder is relative to the current directory, containing .txt files.
+        path: path to the folder is relative to the current working directory, containing .txt files.
     Returns:
         The InvertedIndex god object instance
     """
@@ -48,7 +63,19 @@ class InvertedIndex:
         Returns:
             List: List containing the file names in strings.
         """
-        return [f for f in listdir(self.path) if isfile(join(self.path, f))]
+        file_names = [f for f in listdir(self.path) if isfile(join(self.path, f))]
+        if not file_names:
+            raise NoFilesInDirectoryError
+        txt_file_names = [f for f in file_names if f.endswith(".txt")]
+        if not txt_file_names:
+            raise NoTXTFilesInDirectoryError
+        non_empty_txt_file_names = [
+            f for f in txt_file_names if getsize(join(self.path, f)) != 0
+        ]
+        if not non_empty_txt_file_names:
+            raise NoTXTFilesWithContentInDirectoryError
+        else:
+            return non_empty_txt_file_names
 
     @cached_property
     def raw_data(self) -> List[Tuple[int, str]]:
@@ -61,13 +88,27 @@ class InvertedIndex:
             List: List of tuples containing the id and contents of the files in the path given at initialisation of the
             InvertedIndex instance.
         """
-        return [
-            (
-                int(re.sub("[^0-9]", "", f)),
-                open(abspath(join(self.path, f)), "r").read(),
-            )
-            for f in self.file_names
+        # strip file names from non-numerical characters
+        # E.g. [("file1.txt", "1"), ("file2.txt", "2"), ..., ("fileX.txt", "X")]
+        file_name_to_nr_map = [(f, re.sub("[^0-9]", "", f)) for f in self.file_names]
+        # Cast the non-numerical characters into int:
+        # E.g. [("file1.txt", 1), ("file2.txt", 2), ..., ("fileX.txt", X)]
+        file_name_to_nr_map = [
+            (f[0], int(f[1])) for f in file_name_to_nr_map if f[1].isdigit()
         ]
+        # All file names should have a mapping to a file number:
+        if [f[0] for f in file_name_to_nr_map] != self.file_names:
+            raise FileNameContainsNoNumberError
+        # All file numbers in the mapping should be unique:
+        if len({f[1] for f in file_name_to_nr_map}) != len(file_name_to_nr_map):
+            raise FileNumbersNotUniqueError
+        else:
+            # read file contents for each file in the mapping:
+            file_contents = [
+                (f[1], open(join(self.path, f[0]), "r").read())
+                for f in file_name_to_nr_map
+            ]
+            return sorted(file_contents, key=lambda x: x[0])
 
     @cached_property
     def sentences(self) -> List[Tuple[int, str]]:
@@ -120,7 +161,11 @@ class InvertedIndex:
             CountVectorizer(): instance of the sklearn's CountVectorizer class, fitted on the processed sentences.
         """
         data = [x[2] for x in self.processed_sentences]
-        return CountVectorizer().fit(data)
+        # only fit the data to the Countvectorizer() when there is interesting data left after processing:
+        if sum([len(x) for x in data]) == 0:
+            raise NoInterestingSentencesError
+        else:
+            return CountVectorizer().fit(data)
 
     @cached_property
     def document_term_matrix(self) -> csr_matrix:
